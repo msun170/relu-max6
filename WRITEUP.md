@@ -1,5 +1,7 @@
 # Two hidden layers compute the maximum of six numbers
 
+Matthew Sun. Code and exact verifiers: https://github.com/msun170/relu-max6
+
 This note has three layers, kept separate on purpose: a clean theorem, a separate exact lower bound on a
 finite family, and an open conjecture that would connect them.
 
@@ -73,7 +75,7 @@ vector `lambda`, one entry per sample point, with `lambda . column = 0` for ever
 every linear column, and `lambda . max7 = 1`. Such a `lambda` exists if and only if `max7` is outside the
 span, so it proves Theorem 2. Concretely `lambda` is a 224-dimensional rational vector with 53 nonzero
 entries, defined over 224 integer evaluation points; both `lambda` and the points are too large to print
-here and are attached as the file `max7_certificate.json`. The checker `check_weight2_max7_infeasible.py`
+here and are in the repository as `results/max7_certificate.json`. The checker `check_weight2_max7_infeasible.py`
 rebuilds the entire family of 101087 blocks (136 orbits) from scratch and verifies the dot products
 exactly; it calls no solver. The same argument gives the result for `max8`. The method is consistent for
 `max6` (it recovers Theorem 1), which validates it.
@@ -99,8 +101,8 @@ results do not directly apply.
 
 ## How to check the results
 
-The two checker scripts and the certificate file are attached (and live in a repository available on
-request).
+All code, data, and certificates are in the public repository:
+**https://github.com/msun170/relu-max6** . After cloning, both theorems verify from scratch:
 
 ```
 python check_max6.py                      # verifies Theorem 1 (exact; the adjacency closure step is slow)
