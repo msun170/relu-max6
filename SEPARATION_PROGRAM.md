@@ -29,6 +29,32 @@ weight-2 model.
 Granting this, Theorem 2 says `max7` needs three hidden layers, i.e. the separation. We do not claim this
 is close.
 
+## A cleaner, equivalent form: edge complexity
+
+Define the complexity of an edge as the fewest braid roots `e_a - e_b` summing to it. Then a polytope has
+weight-k vertices (lattice points of `k*Delta`, up to translation) iff every edge has complexity at most k
+(proof: a weight-k vertex difference needs at most k roots by transport; conversely root edges preserve
+weight and the 1-skeleton is connected). So the weight-2 model is exactly "every block edge is a sum of at
+most two roots," and the conjecture is:
+
+**Conjecture (edge form).** A two-hidden-layer representation of `max_n` can be taken with every block edge
+of complexity at most 2.
+
+This is translation-invariant and lives purely in the root lattice. It sits in a ladder:
+- one hidden layer: edges of complexity at most 1 (single roots). PROVEN: a one-hidden-layer homogeneous
+  function is `L + sum_a D_a |a.x|`; its distributional Hessian is a sum of mutually singular measures on
+  the hyperplanes `a^perp`, so matching `max_n` (Hessian on the braid arrangement only) forces every `a`
+  to be a root. Hence one-hidden-layer `max_n` iff `n <= 2`, and the weight-1 model is complete.
+- two hidden layers: edges of complexity at most 2. Conjectured; confirmed on our `max6` construction
+  (zonotope generators are single roots, every bridge is a sum of exactly two roots).
+
+Why the one-layer proof does not extend: P2 blocks are atomic. A complexity-2 bridge is internal to a
+block (you cannot delete it without destroying the block), and bridges cancel only collectively across
+blocks (`sum_t c_t * (bridge length) = 0` on each non-braid hyperplane). So the first-order Hessian is
+blind to them. The natural next tool is second-order / codimension-2: a complexity-2 bridge `r1 + r2` links
+two braid hyperplanes, visible where their walls meet (codim 2); a complexity-3 bridge would link three at
+once, a codim-2 pattern `max_n` does not have. Making that matching precise is the open crux.
+
 ## What is settled along the way
 
 - Reduction chain (clean, provable): any representation may be `S_n`-symmetrized; two-hidden-layer `max_n`
