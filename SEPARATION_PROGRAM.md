@@ -89,10 +89,24 @@ single object. A representation of `max_n` must cancel the non-`max` structure S
 codimension. That cross-codimensional consistency is strictly stronger than the codim-1 Hessian condition
 that atomicity defeats, and it is rigid (the strata of a polytope are not independent). Conjecture: this
 simultaneous multi-stratum cancellation is finitely rigid and bounds the block complexity, hence the width.
-The natural tool is McMullen's polytope algebra / the full stratified (decomposition-polyhedra) structure;
-this turns "bound the width" into "the joint cancellation across all face-codimensions admits only finitely
-many block types." This is the genuinely new line: exploit atomicity (which blocked us locally) as rigidity
-across codimensions (which over-determines the global structure).
+This is the genuinely new line: exploit atomicity (which blocked us locally) as rigidity across strata
+(which over-determines the global structure).
+
+Concrete evidence for the mechanism (gradient-jump localization of max7's weight-2 obstruction): split the
+codim-1 (Hessian) matching into (J) "match max7's gradient jumps across braid walls -- the creases" and
+(NB) "cancel the block jumps across non-braid weight-2 hyperplanes -- the bridges." Result: (J) alone is
+satisfiable, (NB) alone is satisfiable, but (J)+(NB) together is INFEASIBLE. So the same coefficients
+cannot match the creases and cancel the bridges at once -- each stratum is under-determined alone, the
+joint system is over-determined. That is exactly the rigidity mechanism, made concrete.
+
+Where this lives (real-weight tooling): not McMullen's polytope algebra (its computable shadow on a fixed
+fan is the toric Chow ring, and its headline invariant, volume, fails for real weights). The right
+framework is the DECOMPOSITION POLYHEDRA of Brandenburg, Grillo, Hertrich (arXiv:2410.04907): for a fixed
+complex, the polyhedron of all difference-of-support-function (difference-of-convex) decompositions of a
+CPWL function, valid for real weights, with a finite vertex-enumeration of minimal-complexity
+decompositions. Our rank obstruction (and the (J)+(NB) over-determination) should correspond to
+emptiness / bounded-complexity infeasibility of this decomposition polyhedron for max7. It is unimplemented;
+building it from polymake/OSCAR primitives is the concrete next artifact.
 
 ## What is settled along the way
 
