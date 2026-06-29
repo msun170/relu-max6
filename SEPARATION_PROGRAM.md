@@ -55,6 +55,38 @@ blind to them. The natural next tool is second-order / codimension-2: a complexi
 two braid hyperplanes, visible where their walls meet (codim 2); a complexity-3 bridge would link three at
 once, a codim-2 pattern `max_n` does not have. Making that matching precise is the open crux.
 
+## The separation reduces to a width bound, via the existential theory of the reals
+
+For a FIXED width W, "is `max_n` exactly a depth-2 width-W ReLU network?" is a sentence in the first-order
+theory of the reals: `exists weights, for all x, net(x) = max_n(x)`, and the depth-2 parameter space is
+semialgebraic (the ReLU relation `y = max(0,x)` is `y>=0 and y>=x and y(y-x)=0`, degree <= 3). By
+Tarski-Seidenberg this is DECIDABLE over the reals, with no rationality assumption -- so the realization /
+irrationality difficulties never arise. Hence:
+
+> SEPARATION <== a computable a priori width bound `W*(n)` for depth-2 exact representation of `max_n`.
+
+Given `W*(n)`, "is `max_n` 2-layer?" equals "is it 2-layer with width <= `W*(n)`?", a decidable real
+sentence; for `max_n` not 2-layer this proves it. A 2026 literature search found no such width bound (none
+is known for exact fixed-depth representation; no CPWL function is known to need > 2 hidden layers), and
+did not find this `exists-R` reduction written down. So the entire open problem is now this one lemma, on a
+new attack surface (semialgebraic geometry) distinct from the lattice/tropical/extremal-graph approaches.
+Anchor: training ReLU nets is exists-R-complete (Bertschinger et al., NeurIPS 2023), so the family lives at
+exists-R.
+
+## A new angle on the width bound: cross-codimensional (stratified) rigidity
+
+Why single-codimension arguments fail: a block is atomic, so its non-braid bridge cancels collectively at
+codim 1 and cannot be removed term by term. But a block is ONE polytope, so its contributions across ALL
+codimensions (codim-1 edges, codim-2 two-faces, codim-3, ...) are RIGIDLY linked -- they are the faces of a
+single object. A representation of `max_n` must cancel the non-`max` structure SIMULTANEOUSLY at every
+codimension. That cross-codimensional consistency is strictly stronger than the codim-1 Hessian condition
+that atomicity defeats, and it is rigid (the strata of a polytope are not independent). Conjecture: this
+simultaneous multi-stratum cancellation is finitely rigid and bounds the block complexity, hence the width.
+The natural tool is McMullen's polytope algebra / the full stratified (decomposition-polyhedra) structure;
+this turns "bound the width" into "the joint cancellation across all face-codimensions admits only finitely
+many block types." This is the genuinely new line: exploit atomicity (which blocked us locally) as rigidity
+across codimensions (which over-determines the global structure).
+
 ## What is settled along the way
 
 - Reduction chain (clean, provable): any representation may be `S_n`-symmetrized; two-hidden-layer `max_n`
