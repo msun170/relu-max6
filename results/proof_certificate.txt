@@ -1,0 +1,10 @@
+Exact computer-assisted proof: max(x1,...,x6) is computable by a 2-hidden-layer ReLU network.
+
+Construction: signed sum of weight-2 P2 support functions, denominator D=360.
+Gradient-relevant arrangement: 35 unforced hyperplanes in R^5 (gap coordinates).
+(1) Complete deterministic enumeration: 2608 cells, each with an exact integer witness.
+(2) Exact gradient = e1 on all 2608 cells.
+(3) Adjacency closure: 13756 in-set flips + 77524 flips with exact Gordan empty
+    certificates, 0 gaps => the enumeration is complete.
+
+Therefore C == x1 == max6 on the chamber; by continuity and S6-symmetry, == max6 on R^6. QED.
