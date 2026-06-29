@@ -165,3 +165,34 @@ not merely be present. This matches the J/NB localization (Section 3): each stra
 and only the joint, signed matching is over-determined. It also explains why our only rigorous non-membership
 is the exact dual certificate, not a counting bound: width/counting is the wrong tool, and the algebraic
 (certificate / normal-form) route is the right one. That is the redirected target.
+
+## 6. A second barrier: the obstruction must be scale-invariant
+
+The known unconditional lower bound (Haase-Hertrich-Loho, arXiv:2302.12553) shows that with **integer**
+weights, `ceil(log2 n)` hidden layers are necessary for `max_n`, via a parity argument on the normalized
+volume of faces of a lattice Newton polytope. That bound is **scale-sensitive**: dilating `x -> Dx` (clearing
+denominators of a rational network) multiplies normalized volumes by `D^d` and changes their parity, so the
+argument evaporates for rational weights. This is not a defect of the proof; it is the real reason rational
+weights are strictly more powerful: `max_5` and `max_6` are two-hidden-layer with rational weights but need
+three with integer weights. Hence:
+
+> Any proof of the real/rational separation must rest on a **scale-invariant** obstruction. Lattice-volume
+> parity (HHL) is scale-sensitive; so is any fixed-lattice dual certificate.
+
+Two concrete confirmations that our current tools are scale-specific, not scale-invariant:
+- **Fixed-lattice membership is dominated by rescaling.** Whether `max_n` is two-layer is a question over the
+  union of all lattice scales (all rational weights). We verify `max_7` is not in the *coarsest* lattice
+  (weight-2, Theorem 2), but the complete weight-3 family already has functional rank `>= 3500`, so deciding
+  `max_7` there is at the edge of exact computation; finer scales are the genuine open content. (A naive
+  least-squares "max_7 is in weight-3" reading is a rank-saturation artifact -- an exact random-target
+  control shows the system is underdetermined at those sizes.)
+- **Our weight-2 certificate does not extend.** The exact dual certificate `lambda` that proves Theorem 2
+  (`lambda . max_7 = 1`, `lambda` annihilates every weight-2 block) fails to annihilate weight-3 blocks
+  (1978 of 2000 tested are nonzero). It is tied to its lattice.
+
+**Honest status.** Rigorously, `max_n` is two-hidden-layer for `n <= 6`, and `max_7` is not two-layer inside
+the weight-2 lattice. Whether `max_7` is two-layer at all (finer lattices / real weights) is open: the
+conjecture is that it is not, but the evidence past weight-2 is partial. The two barriers above say what a
+proof cannot be (a covering/counting bound; a fixed-lattice parity or certificate) and therefore sharpen the
+target: a single scale-invariant obstruction -- equivalently, the normal-form lemma of Section 4 -- that
+holds simultaneously at every lattice refinement.
