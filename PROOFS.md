@@ -101,6 +101,15 @@ built from joins of zonotopes whose vertices lie in the weight-2 lattice `2*Delt
 certificate is a rational functional annihilating every block in that family while pairing nontrivially with
 `max_7`; it is confirmed mod three large primes.
 
+**Theorem 2b (finite, exact, GPU; `gpu_w3.py`).** The same holds over the COMPLETE weight-3 model: `max_7`
+is not a signed combination of support functions of joins of two zonotopes whose vertices lie in `3*Delta^6`
+(full generator set, dim-<=3 zonotopes). The weight-3 orbit family has 19219 blocks of near-full rank
+(18866 of 19226 design columns), so a valid test needs `m > 19226` sample points; at `m = 20000` the exact
+mod-p rank gives `max_7` OUT, with a random-target control confirming non-vacuity, verified mod two large
+primes (rank 18866 both). [A naive least-squares or small-`m` exact test is rank-saturated and VACUOUS --
+it spuriously reports IN; only `m` above the rank settles it, which needed GPU elimination on a
+20000x19228 matrix.] So the depth-2 lower bound for `max_7` now holds over weight-2 AND weight-3.
+
 The full lower bound is Theorem 2 with the lattice restriction removed. By the Reduction, that is:
 
 > **Open lemma (normal form / summand closure).** If `Delta` is a Minkowski summand of a sum of joins of
