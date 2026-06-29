@@ -40,6 +40,13 @@ most two roots," and the conjecture is:
 **Conjecture (edge form).** A two-hidden-layer representation of `max_n` can be taken with every block edge
 of complexity at most 2.
 
+Structural lemma (verified n=3..9): a weight-k lattice zonotope has dimension at most k (a weight-2
+zonotope is a point, segment, or parallelogram, <= 4 vertices). A weight-k point is "k tokens" on the
+coordinates; a braid generator moves one token; with k tokens there are at most k independent move
+directions, so dimension <= k. Hence the ladder is also: k hidden layers <-> dimension-<=-k building
+blocks. Consequence: for n=7 the weight-2 two-way joins have <= 8 vertices, so the 136-orbit family is
+genuinely complete and Theorem 2 is independent of any vertex cap.
+
 This is translation-invariant and lives purely in the root lattice. It sits in a ladder:
 - one hidden layer: edges of complexity at most 1 (single roots). PROVEN: a one-hidden-layer homogeneous
   function is `L + sum_a D_a |a.x|`; its distributional Hessian is a sum of mutually singular measures on
