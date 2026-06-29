@@ -33,11 +33,11 @@ denominator `360`:
 ```
 max6 = sum over 6 orbits  c_o * (sum over the orbit of h_R),   c_o in {1/360,-1/360,1/360,1/90,-1/90,-1/180}
 ```
-with zero linear part. The six orbit representatives are in `results/construction_max6.txt`. Each `R` is a
-join of two weight-2 zonotopes, so each `h_R` is a two-hidden-layer function and the signed sum is two
-hidden layers. Expanding the six orbits over `S6` gives 1530 individual building blocks. The explicit
-decomposition `R = conv(Z1 u Z2)` of each representative (base points, generators, vertices) is in
-`results/p2_decompositions_max6.json`, and `check_max6.py` verifies it.
+with zero linear part. The six orbit representatives are listed in Appendix A. Each `R` is a join of two
+weight-2 zonotopes, so each `h_R` is a two-hidden-layer function and the signed sum is two hidden layers.
+Expanding the six orbits over `S6` gives 1530 individual building blocks. The explicit decomposition
+`R = conv(Z1 u Z2)` of each representative (base points, generators, vertices) is in Appendix B, and the
+checker `check_max6.py` verifies it.
 
 **Verification (`check_max6.py`).** Both sides are piecewise linear, so equality reduces to checking
 gradients on every cell of an arrangement. The gradient of the construction changes only across the
@@ -68,13 +68,15 @@ points included so pyramids appear; all two-way joins), giving 101087 blocks in 
 **Theorem 2.** `max7` is not a signed sum of these building blocks. Equivalently, no representation of
 `max7` as a signed sum of support functions of two-way joins of weight-2 zonotopes exists.
 
-This is exact and checkable without trusting any solver. We provide a **dual certificate**
-(`results/max7_certificate.json`, checked by `check_weight2_max7_infeasible.py`): a rational vector
-`lambda` with `lambda . column = 0` for every block-orbit column and every linear column, and
-`lambda . max7 = 1`. Such a `lambda` exists if and only if `max7` is outside the span, so it proves
-Theorem 2. The check script rebuilds the entire family from scratch and verifies these dot products
-exactly; it calls no solver. The same holds for `max8`. The method is consistent for `max6` (it recovers
-Theorem 1), which validates it.
+This is exact and checkable without trusting any solver. We provide a **dual certificate**: a rational
+vector `lambda`, one entry per sample point, with `lambda . column = 0` for every block-orbit column and
+every linear column, and `lambda . max7 = 1`. Such a `lambda` exists if and only if `max7` is outside the
+span, so it proves Theorem 2. Concretely `lambda` is a 224-dimensional rational vector with 53 nonzero
+entries, defined over 224 integer evaluation points; both `lambda` and the points are too large to print
+here and are attached as the file `max7_certificate.json`. The checker `check_weight2_max7_infeasible.py`
+rebuilds the entire family of 101087 blocks (136 orbits) from scratch and verifies the dot products
+exactly; it calls no solver. The same argument gives the result for `max8`. The method is consistent for
+`max6` (it recovers Theorem 1), which validates it.
 
 ## Discussion: the open conjecture
 
@@ -97,6 +99,9 @@ results do not directly apply.
 
 ## How to check the results
 
+The two checker scripts and the certificate file are attached (and live in a repository available on
+request).
+
 ```
 python check_max6.py                      # verifies Theorem 1 (exact; the adjacency closure step is slow)
 python check_weight2_max7_infeasible.py   # verifies Theorem 2 via the exact dual certificate
@@ -109,3 +114,40 @@ Arora, Basu, Mianjy, Mukherjee, ICLR 2018 (arXiv:1611.01491). Hertrich, Basu, Di
 Stade, Yehudayoff, STOC 2026 (arXiv:2505.14338). Brandenburg, Grillo, Hertrich, ICLR 2025
 (arXiv:2410.04907). Grillo, Hertrich, Loho, NeurIPS 2025 (arXiv:2502.09324). Safran, 2026
 (arXiv:2601.01417).
+
+## Appendix A: the six orbit representatives
+
+Each entry gives the coefficient `c_o` and the vertex (gradient) set of one orbit representative `R`. The
+full orbit is the `S6`-image of `R`, and `max6 = sum_o c_o (sum over the orbit of h_R)`, with `D = 360` and
+zero linear part. Coordinates are in `R^6`.
+
+```
+1.  c = 1/360 : (0,0,1,0,0,1) (0,0,2,0,0,0) (0,1,1,0,0,0) (1,0,0,0,0,1) (1,0,1,0,0,0) (2,0,0,0,0,0)
+2.  c = -1/360: (0,0,1,0,0,1) (0,0,2,0,0,0) (0,1,0,0,0,1) (0,1,0,0,1,0)
+3.  c = 1/360 : (0,0,0,0,0,2) (0,0,0,0,1,1) (0,0,0,1,0,1) (0,0,0,2,0,0) (0,1,0,0,0,1) (0,1,0,0,1,0) (0,2,0,0,0,0)
+4.  c = 1/90  : (0,0,0,1,0,1) (0,0,1,0,0,1) (0,0,1,1,0,0) (0,0,2,0,0,0) (0,1,0,0,1,0) (0,1,1,0,0,0) (1,0,0,0,1,0) (1,0,1,0,0,0)
+5.  c = -1/90 : (0,0,0,1,0,1) (0,0,0,1,1,0) (0,0,1,1,0,0) (0,1,0,0,0,1) (0,1,0,0,1,0) (0,1,0,1,0,0) (1,0,1,0,0,0) (1,1,0,0,0,0)
+6.  c = -1/180: (0,0,0,0,0,2) (0,0,0,0,1,1) (0,0,1,0,0,1) (0,0,1,0,1,0) (0,1,0,1,0,0) (1,0,0,1,0,0) (1,1,0,0,0,0) (2,0,0,0,0,0)
+```
+
+## Appendix B: the join decompositions R = conv(Z1 u Z2)
+
+A zonotope `Z` is given by a base point and a list of generators; its vertices are the base plus every
+subset sum of the generators (all of which lie among the weight-2 points). Each representative `R` in
+Appendix A equals `conv(Z1 u Z2)`, so `h_R = max(h_{Z1}, h_{Z2})` is a two-hidden-layer building block.
+Generators are written as vectors in `R^6`.
+
+```
+1.  Z1: base (2,0,0,0,0,0)  gens (-1,0,1,0,0,0) (-1,0,0,0,0,1)
+    Z2: base (0,0,2,0,0,0)  gens (0,1,-1,0,0,0)
+2.  Z1: base (0,0,2,0,0,0)  gens (0,0,-1,0,0,1)
+    Z2: base (0,1,0,0,1,0)  gens (0,0,0,0,-1,1)
+3.  Z1: base (0,2,0,0,0,0)  gens (0,-1,0,0,1,0) (0,-1,0,0,0,1)
+    Z2: base (0,0,0,1,0,1)  gens (0,0,0,1,0,-1) (0,0,0,-1,0,1)
+4.  Z1: base (0,0,2,0,0,0)  gens (0,0,-1,1,0,0) (0,0,-1,0,0,1)
+    Z2: base (1,0,1,0,0,0)  gens (-1,1,0,0,0,0) (0,0,-1,0,1,0)
+5.  Z1: base (1,1,0,0,0,0)  gens (0,-1,1,0,0,0) (-1,0,0,1,0,0)
+    Z2: base (0,1,0,0,1,0)  gens (0,-1,0,1,0,0) (0,0,0,0,-1,1)
+6.  Z1: base (2,0,0,0,0,0)  gens (-1,1,0,0,0,0) (-1,0,0,1,0,0)
+    Z2: base (0,0,0,0,0,2)  gens (0,0,1,0,0,-1) (0,0,0,0,1,-1)
+```
