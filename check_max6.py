@@ -34,6 +34,29 @@ flatcoef, flatV, D, L = construction.flat_terms()
 DL = np.array([int(x*D) for x in L], dtype=np.int64)
 print(f"construction: {len(construction.load()[0])} orbit terms -> {len(flatV)} P2 terms, D={D} [{time.time()-t0:.0f}s]", flush=True)
 
+# verify each orbit block is a genuine join of two zonotopes (the P2 decomposition)
+def verify_p2():
+    import json
+    decs = json.load(open("results/p2_decompositions_max6.json"))
+    repsets = [frozenset(tuple(v) for v in r) for r in construction.load()[1]]
+    def zono(base, gen):
+        out = set()
+        for mask in range(1 << len(gen)):
+            v = list(base)
+            for k in range(len(gen)):
+                if mask >> k & 1:
+                    for c in range(6): v[c] += gen[k][c]
+            out.add(tuple(v))
+        return out
+    for d in decs:
+        Z1 = zono(d["Z1_base"], d["Z1_generators"]); Z2 = zono(d["Z2_base"], d["Z2_generators"])
+        L1 = set(map(tuple, d["Z1_vertices"])); L2 = set(map(tuple, d["Z2_vertices"]))
+        J = set(map(tuple, d["join_vertices"]))
+        if Z1 != L1 or Z2 != L2 or (L1 | L2) != J or J not in repsets: return False, len(decs)
+    return True, len(decs)
+ok_p2, n_p2 = verify_p2()
+print(f"P2 decompositions: {n_p2} orbits each conv(Z1 u Z2) of two zonotopes -> {'OK' if ok_p2 else 'FAIL'}", flush=True)
+
 # relevant hyperplanes: differences g - g' of co-vertices in some term, reduced to integer normals
 def canon_normal(d):
     g = 0

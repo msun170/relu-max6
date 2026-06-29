@@ -50,7 +50,7 @@ target = X.max(axis=1)
 dot_target = sum(lam[i]*int(target[i]) for i in range(m))
 
 print(f"orbit+linear columns annihilated by lambda: {'ALL' if bad == 0 else f'{bad} FAILED'}", flush=True)
-print(f"lambda . max7  = {dot_target}  (must be nonzero)", flush=True)
-ok = (bad == 0 and dot_target != 0)
+print(f"lambda . max7  = {dot_target}  (certificate claims 1, must be nonzero)", flush=True)
+ok = (bad == 0 and dot_target == 1)
 print("RESULT:", "PASS -- max7 is not in the complete weight-2 two-layer span (exact)." if ok
       else "FAIL", flush=True)

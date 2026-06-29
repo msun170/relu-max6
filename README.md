@@ -30,7 +30,8 @@ Expected output of the second: `RESULT: PASS -- max7 is not in the complete weig
 |------|------|
 | `core.py` | shared engine: weight-2 lattice, zonotopes, S_n-orbit canonicalization, support functions, exact rational solve |
 | `construction.py` | the six-orbit max6 construction, expanded to its building blocks |
-| `check_max6.py` | Theorem 1: cell enumeration, exact gradient, exact adjacency closure |
+| `make_p2_decompositions.py` | writes each orbit's explicit `conv(Z1 u Z2)` decomposition |
+| `check_max6.py` | Theorem 1: P2 decompositions, cell enumeration, exact gradient, exact adjacency closure |
 | `verify.py` | an independent exact verifier (separate code path) |
 | `build_max7_certificate.py` | builds the exact dual certificate for Theorem 2 |
 | `check_weight2_max7_infeasible.py` | Theorem 2: regenerates the family and verifies the certificate |

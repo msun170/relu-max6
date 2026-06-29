@@ -10,12 +10,15 @@ function comes from some ReLU network. The standard test case is the maximum, `m
 A binary tree of pairwise maxima computes `max_n` with `ceil(log2 n)` hidden layers, and it was conjectured
 this is optimal (Hertrich, Basu, Di Summa, Skutella). Bakaev, Brunck, Hertrich, Stade, and Yehudayoff
 (STOC 2026) disproved this for `n = 5`: `max5` needs only two hidden layers, not three. They left `max6`
-open. (It is still listed as open as of Safran, Jan 2026.) This note resolves `max6`.
+open. This note resolves `max6`. (Safran 2026 gives unconditional super-linear width lower bounds for the
+maximum at depth at least three; it is a width result, not a two-versus-three unbounded-width separation.)
 
-A useful fact: a two-hidden-layer ReLU network computes exactly the signed sums of support functions of
-joins of two zonotopes (plus a linear term). The support function of a polytope `P` is
-`h_P(x) = max over vertices g of <g,x>`, and `max_n = h_Delta` for the simplex `Delta = conv{e_1,...,e_n}`.
-So computing `max6` in two layers means writing `h_Delta` as a signed sum of such building blocks.
+In the polyhedral framework of HBDS/BBHSY, two-hidden-layer representability can be studied through
+differences of support functions of polytopes in the class P2. Expanding the P2 operations reduces the
+constructions used here to signed sums of support functions of joins of two zonotopes, plus a linear term.
+The support function of a polytope `P` is `h_P(x) = max over vertices g of <g,x>`, and `max_n = h_Delta`
+for the simplex `Delta = conv{e_1,...,e_n}`. So computing `max6` in two layers means writing `h_Delta` as
+a signed sum of such building blocks.
 
 By the **weight-2 model** we mean the finite family of building blocks whose support-function vertices lie
 among the weight-2 lattice points `{2 e_i}` and `{e_i + e_j}` of the dilated simplex `2 Delta^{n-1}`. This
@@ -32,7 +35,9 @@ max6 = sum over 6 orbits  c_o * (sum over the orbit of h_R),   c_o in {1/360,-1/
 ```
 with zero linear part. The six orbit representatives are in `results/construction_max6.txt`. Each `R` is a
 join of two weight-2 zonotopes, so each `h_R` is a two-hidden-layer function and the signed sum is two
-hidden layers. Expanding the six orbits over `S6` gives 1530 individual building blocks.
+hidden layers. Expanding the six orbits over `S6` gives 1530 individual building blocks. The explicit
+decomposition `R = conv(Z1 u Z2)` of each representative (base points, generators, vertices) is in
+`results/p2_decompositions_max6.json`, and `check_max6.py` verifies it.
 
 **Verification (`check_max6.py`).** Both sides are piecewise linear, so equality reduces to checking
 gradients on every cell of an arrangement. The gradient of the construction changes only across the
@@ -60,14 +65,16 @@ zonotopes is `max(h1,h2,h3)`, which is three hidden layers, not two.) We enumera
 for `n = 7` (all weight-2 zonotopes via every weight-2 point-difference generator, braid and non-braid;
 points included so pyramids appear; all two-way joins), giving 101087 blocks in 136 `S7`-orbits.
 
-**Theorem 2.** `max7` is not a signed sum of these building blocks. Equivalently, no two-hidden-layer ReLU
-network whose building blocks have weight-2 vertices computes `max7`.
+**Theorem 2.** `max7` is not a signed sum of these building blocks. Equivalently, no representation of
+`max7` as a signed sum of support functions of two-way joins of weight-2 zonotopes exists.
 
-This is exact. The linear system "is `max7` in the span" is inconsistent over the rationals. We provide a
-**dual certificate** (`results/max7_certificate.json`, checked by `check_weight2_max7_infeasible.py`): a
-rational vector `lambda` with `lambda . column = 0` for every block-orbit column and every linear column,
-and `lambda . max7 = 1 != 0`. Its existence proves `max7` is outside the span. The same holds for `max8`.
-For comparison, the method is consistent for `max6` (it recovers Theorem 1), which validates it.
+This is exact and checkable without trusting any solver. We provide a **dual certificate**
+(`results/max7_certificate.json`, checked by `check_weight2_max7_infeasible.py`): a rational vector
+`lambda` with `lambda . column = 0` for every block-orbit column and every linear column, and
+`lambda . max7 = 1`. Such a `lambda` exists if and only if `max7` is outside the span, so it proves
+Theorem 2. The check script rebuilds the entire family from scratch and verifies these dot products
+exactly; it calls no solver. The same holds for `max8`. The method is consistent for `max6` (it recovers
+Theorem 1), which validates it.
 
 ## Discussion: the open conjecture
 
