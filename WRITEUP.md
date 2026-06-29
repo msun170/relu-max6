@@ -65,7 +65,10 @@ The weight-2 model is finite: a weight-2 zonotope has vertices among finitely ma
 building blocks are the two-way joins of such zonotopes. (Only two-way joins count: a join of three
 zonotopes is `max(h1,h2,h3)`, which is three hidden layers, not two.) We enumerate the **complete** family
 for `n = 7` (all weight-2 zonotopes via every weight-2 point-difference generator, braid and non-braid;
-points included so pyramids appear; all two-way joins), giving 101087 blocks in 136 `S7`-orbits.
+points included so pyramids appear; all two-way joins), giving 101087 blocks in 136 `S7`-orbits. The
+enumeration is genuinely complete: the largest weight-2 zonotope has only 4 vertices (a parallelogram; a
+third generator never keeps all vertices on the 28-point lattice), so every two-way join has at most 8
+vertices, and raising the vertex cap to its maximum (28) leaves the 136 orbits and the result unchanged.
 
 **Theorem 2.** `max7` is not a signed sum of these building blocks. Equivalently, no representation of
 `max7` as a signed sum of support functions of two-way joins of weight-2 zonotopes exists.
