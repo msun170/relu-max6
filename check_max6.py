@@ -50,8 +50,7 @@ for V in flatV:
             cn = canon_normal(tuple(int(V[a][k]-V[b][k]) for k in range(n)))
             if cn: H.add(cn)
 
-# gap coordinates y_k = x_k - x_{k+1} > 0. A normal h maps to w_k = sum_{i<=k} h_i (k=1..5); h is
-# "forced" (constant sign on y>0) iff all w_k share a sign. Keep the unforced ones.
+# gap coordinates y_k = x_k - x_{k+1} > 0; keep only normals unforced on y>0
 def canon_w(wv):
     g = 0
     for x in wv: g = gcd(g, abs(x))
@@ -124,9 +123,7 @@ def verify_zero(cand, gens, k):
     return all(v == 0 for v in s)
 
 def empty_certificate(gens):
-    # True iff there is a nonneg nonzero rational x with sum_j x_j gens_j = 0 (Gordan: the cell is
-    # empty). We compute the exact nullspace; a single sign-consistent basis vector is a certificate,
-    # otherwise an LP finds a nonneg combination which we then verify exactly (no false positives).
+    # Gordan: cell empty iff some nonneg nonzero rational x has sum_j x_j gens_j = 0; verified exactly
     k = len(gens); Amat = [[F(gens[j][r]) for j in range(k)] for r in range(5)]
     piv = []; r = 0
     for c in range(k):

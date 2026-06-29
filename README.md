@@ -1,56 +1,47 @@
 # max6 in two hidden layers
 
-An exact, computer-assisted proof that `max(x1, ..., x6)` is computable by a ReLU neural network with
-**two hidden layers** (arbitrary width, rational weights). This resolves an open problem of Bakaev,
-Brunck, Hertrich, Stade, and Yehudayoff (*Better Neural Network Expressivity: Subdividing the Simplex*,
-STOC 2026), who proved the same for `max5` and explicitly left `max6` open.
+Two results about computing the maximum with shallow ReLU networks, kept as separate layers:
 
-## The result
+- **Theorem 1.** `max(x1,...,x6)` is computable by a ReLU network with two hidden layers (exact proof).
+- **Theorem 2.** `max7` (and `max8`) has no two-hidden-layer representation whose building blocks have
+  weight-2 vertices (exact, with a checkable dual certificate). This is a finite-family lower bound, not
+  the full separation.
+- **Open conjecture.** Every two-hidden-layer `max_n` can be normalized into the weight-2 model. If true,
+  Theorem 2 gives the first two-versus-three hidden-layer separation over the reals.
 
-There is an explicit signed combination of **6 S6-orbits of P2 support functions** (denominator 360)
-equal to `max6`. A P2 support function is the support function of a join of two zonotopes, which a
-2-hidden-layer ReLU network computes exactly; a signed sum of them is again 2 hidden layers. So the
-construction *is* a 2-hidden-layer network, and we prove it equals `max6` everywhere, with no floating
-point in the certificate.
+Theorem 1 resolves an open problem of Bakaev, Brunck, Hertrich, Stade, Yehudayoff (STOC 2026), who proved
+the `max5` case and left `max6` open. See `WRITEUP.md` for the readable account.
 
-The proof reduces, by S6-symmetry and a gradient argument, to checking that a construction-dependent
-gradient equals `e1` on every cell of a 35-hyperplane arrangement in R^5. That arrangement has exactly
-**2608 cells**; we enumerate all of them deterministically (each with an exact integer witness), verify
-the gradient exactly, and prove the enumeration complete by an exact rational adjacency-closure argument.
-
-## Layout
-
-| file | what it is |
-|------|------------|
-| `core.py` | shared engine: weight-2 lattice, zonotopes, S_n-orbit canonicalization, support functions, exact rational solve (parameterized by n) |
-| `construction.py` | loads `results/construction_max6.txt` and expands it to its individual P2 terms |
-| `prove_max6.py` | the exact theorem: cell enumeration + exact gradient check + adjacency-closure completeness |
-| `verify.py` | a fully independent exact CPWL verifier (separate code path, for cross-checking) |
-| `search.py` | general-n search: is `maxn` a signed sum of weight-2 P2 support functions? |
-| `minimize.py` | minimize the construction (fewest orbit terms, smallest denominator) |
-| `lower_bound.py` | complete weight-2 enumeration: proves `max7`/`max8` have no weight-2 two-layer representation |
-| `results/` | the construction and the proof certificate |
-
-## Reproduce
+## Check the theorems
 
 Requires Python 3 with `numpy` and `scipy`.
 
 ```
-python prove_max6.py     # regenerates results/proof_certificate.txt   (~10 min)
-python minimize.py       # regenerates results/construction_max6.txt   (minimal 6-orbit form)
-python search.py 6       # find a 2-layer construction for max6 and verify it
-python search.py 7 R4 C16 J3   # max7: reports inconsistent even in a rich class
-python verify.py         # independent verifier self-checks
+python check_max6.py                      # Theorem 1: exact proof (the adjacency-closure step takes ~10 min)
+python check_weight2_max7_infeasible.py   # Theorem 2: verifies the exact dual certificate (~20 s)
 ```
 
-## Status and scope
+Expected output of the first: `VERDICT: max6 IS computable in 2 hidden layers ...`.
+Expected output of the second: `RESULT: PASS -- max7 is not in the complete weight-2 two-layer span (exact).`
 
-- `max6`: **proven** in two hidden layers (exact, this repo).
-- `max7`, `max8`: **proven** to have no weight-2 two-hidden-layer representation (`lower_bound.py`, exact
-  over Q, complete enumeration of the finite weight-2 building-block family with all generators). This is
-  a conditional lower bound; the full two-vs-three layer separation needs only the normal-form conjecture
-  that a two-layer `maxn` may be assumed weight-2.
-- Note: only TWO-way joins are valid two-layer building blocks (a three-way join is three layers). Earlier
-  exploratory searches that included higher joins were testing a larger, non-two-layer space.
-- The construction uses rational (non-integer) weights, which is necessary: integer-weight ReLU nets
-  provably need `ceil(log2 n)` layers for `maxn` (Haase, Hertrich, Loho, ICLR 2023).
+## Files
+
+| file | role |
+|------|------|
+| `core.py` | shared engine: weight-2 lattice, zonotopes, S_n-orbit canonicalization, support functions, exact rational solve |
+| `construction.py` | the six-orbit max6 construction, expanded to its building blocks |
+| `check_max6.py` | Theorem 1: cell enumeration, exact gradient, exact adjacency closure |
+| `verify.py` | an independent exact verifier (separate code path) |
+| `build_max7_certificate.py` | builds the exact dual certificate for Theorem 2 |
+| `check_weight2_max7_infeasible.py` | Theorem 2: regenerates the family and verifies the certificate |
+| `lower_bound.py` | general-n weight-2 enumeration and exact membership test |
+| `search.py` | general-n search for a weight-2 construction |
+| `minimize.py` | minimize the construction (fewest orbit terms) |
+| `results/` | construction, proof certificate, max7 dual certificate |
+| `WRITEUP.md` | the readable account; `SEPARATION_PROGRAM.md` the research program for the conjecture |
+
+## Notes
+
+The construction uses rational weights, which is necessary: integer-weight ReLU networks provably need
+`ceil(log2 n)` hidden layers for `max_n` (Haase, Hertrich, Loho). Only two-way joins are valid
+two-hidden-layer building blocks; a three-way join is three layers.
