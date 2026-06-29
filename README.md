@@ -28,6 +28,7 @@ the gradient exactly, and prove the enumeration complete by an exact rational ad
 | `verify.py` | a fully independent exact CPWL verifier (separate code path, for cross-checking) |
 | `search.py` | general-n search: is `maxn` a signed sum of weight-2 P2 support functions? |
 | `minimize.py` | minimize the construction (fewest orbit terms, smallest denominator) |
+| `lower_bound.py` | complete weight-2 enumeration: proves `max7`/`max8` have no weight-2 two-layer representation |
 | `results/` | the construction and the proof certificate |
 
 ## Reproduce
@@ -45,8 +46,11 @@ python verify.py         # independent verifier self-checks
 ## Status and scope
 
 - `max6`: **proven** in two hidden layers (exact, this repo).
-- `max5`, `max6`: live in the natural weight-2 P2 class. `max7`, `max8`: not expressible in that class
-  even after enlarging it ~45x (strong evidence the 2-layer frontier for `max` ends at 6). These
-  negatives are class-restricted and are **not** formal lower bounds.
+- `max7`, `max8`: **proven** to have no weight-2 two-hidden-layer representation (`lower_bound.py`, exact
+  over Q, complete enumeration of the finite weight-2 building-block family with all generators). This is
+  a conditional lower bound; the full two-vs-three layer separation needs only the normal-form conjecture
+  that a two-layer `maxn` may be assumed weight-2.
+- Note: only TWO-way joins are valid two-layer building blocks (a three-way join is three layers). Earlier
+  exploratory searches that included higher joins were testing a larger, non-two-layer space.
 - The construction uses rational (non-integer) weights, which is necessary: integer-weight ReLU nets
   provably need `ceil(log2 n)` layers for `maxn` (Haase, Hertrich, Loho, ICLR 2023).
