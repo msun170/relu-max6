@@ -104,9 +104,17 @@ fan is the toric Chow ring, and its headline invariant, volume, fails for real w
 framework is the DECOMPOSITION POLYHEDRA of Brandenburg, Grillo, Hertrich (arXiv:2410.04907): for a fixed
 complex, the polyhedron of all difference-of-support-function (difference-of-convex) decompositions of a
 CPWL function, valid for real weights, with a finite vertex-enumeration of minimal-complexity
-decompositions. Our rank obstruction (and the (J)+(NB) over-determination) should correspond to
-emptiness / bounded-complexity infeasibility of this decomposition polyhedron for max7. It is unimplemented;
-building it from polymake/OSCAR primitives is the concrete next artifact.
+decompositions.
+
+CONFIRMED (computationally): our obstruction IS the bounded-complexity emptiness of this polyhedron. The
+weight-2 decomposition polyhedron is D(max_n) = {(a,b) >= 0 : sum_i (a_i - b_i) h_block_i = max_n}, where
+g = sum a_i block_i and h = sum b_i block_i are convex, so g - h = max_n is a difference of convex with
+weight-2 P2 pieces. We computed (scipy LP): D(max6) is NONEMPTY, D(max7) is EMPTY. So Theorem 2 is exactly
+"the BGH decomposition polyhedron of max7 is empty at weight-2 complexity," and the (J)+(NB)
+over-determination is its "intersection of two cones is empty" structure, with an explicit separating
+certificate. Real-weight generality is automatic (a rational vector is in the real span iff in the rational
+span). The framework reframes the open question precisely -- is D(max7) empty at ALL complexity? -- but, like
+every tool here, it does not bound the complexity for free; that bound is the lemma.
 
 ## What is settled along the way
 
