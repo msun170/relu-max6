@@ -122,13 +122,46 @@ width/complexity bound exists for exact fixed-depth representation).
    Brandenburg-Grillo-Hertrich decomposition polyhedron of `max_7` is empty at weight-2 complexity and
    nonempty for `max_6`; Theorem 2 is exactly its bounded-complexity emptiness.
 
-### The concrete attack on the open lemma
+## 5. A width angle: one clean theorem, and a barrier
 
-The triangular 2-faces of `Delta` are what must be supplied by **bridge faces** of joins (Section 3). A
-single join of two zonotopes contributes a bounded stock of bridge triangles, while `Delta` has `C(n,3)`
-triangular 2-faces, one per triple, each needing the three root edges `e_i-e_j, e_j-e_k, e_k-e_i` to close.
-The codimension-2 closing relations (edges around each 2-face sum to zero) couple the directional densities
-across triples for a *single* fixed block set. Turning "few bridge triangles per block, many triangles to
-cover, closing relations couple them" into a width lower bound that grows with `n` -- and then into the
-normal form -- is the open crux. This is the cross-codimensional rigidity: each block is one polytope, so
-its bridge faces across all the `C(n,3)` corners are not independent.
+The triangular 2-faces of `Delta` must be supplied by **bridge faces** of joins (Section 3). This suggests
+counting: maybe a depth-2 representation of `max_n` needs many blocks. Here is what that yields.
+
+**Theorem 3 (join rank one). `max_n` is a single depth-2 block iff `n <= 4`.** A single block means
+`max_n = c h_Q + linear`, i.e. `Delta_n = cQ + t` is a dilated join of two zonotopes. A zonotope that is a
+simplex is only a point or a segment (a zonotope has centrally symmetric 2-faces; a simplex of dimension
+`>= 2` does not), so `conv(Z_1 u Z_2)` has at most `2 + 2 = 4` vertices. Hence `Delta_n` (with `n` vertices)
+is a single join iff `n <= 4`. The witness for `n = 4` is `Delta_4 = conv([e_1,e_2] u [e_3,e_4])`, the join
+of two segments (a tetrahedron); confirmed computationally (`join_rank1.py`: single block found for `n=3,4`,
+none for `n=5,6`). This is the exact depth-2 analogue of Theorem 1's `n <= 2`.
+
+**The covering reduction (rigorous, real-weight valid).** At corner `C_{ijk}` (normal cone where `i,j,k`
+tie for the max) the face of `Delta` is the triangle `T_{ijk}`, which is not centrally symmetric. In
+`sum_t c_t h_{Q_t}` the face at `C_{ijk}` is the signed Minkowski sum `sum_t c_t face_{Q_t}(C_{ijk})`.
+Centrally symmetric faces (the parallelogram faces of the zonotope parts) carry zero asymmetry, so the
+triangle's asymmetry must come from a block with a non-centrally-symmetric 2-face at `C_{ijk}`. Writing
+`S_t = { (i,j,k) : Q_t has an asymmetric 2-face in cone C_{ijk} }`, every corner is covered:
+`union_t S_t =` all `C(n,3)` triples. Hence
+
+  **WIDTH >= C(n,3) / max_t |S_t|.**
+
+**Barrier: this cannot prove width growth.** Measuring `|S_t|` over the lattice blocks
+(`asymmetry_cover.py`):
+
+  n=5: C(n,3)=10, max|S_t|=7   (ratio 0.70)
+  n=6: C(n,3)=20, max|S_t|=9   (ratio 0.45)
+  n=7: C(n,3)=35, max|S_t|=16  (ratio 0.46)
+
+A single block already covers a roughly **constant fraction (~46%)** of all corners, so the bound is stuck
+at `C(n,3)/max|S_t| ~ 2`-`3`, independent of `n`. For general real blocks (larger zonotopes) `max|S_t|` only
+grows, weakening the bound further. So the covering/counting route gives at best a constant width lower
+bound and cannot yield growth.
+
+**Consequence (a barrier, stated honestly).** The separation -- if true -- does not follow from any argument
+that only counts how many corners (or faces) the blocks must cover, because the relevant combinatorial
+quantity does not grow: blocks are cheap to spread across corners. Any proof must be **cancellation
+sensitive** -- it must use that the asymmetric faces have to *add up exactly* to the triangles (with signs),
+not merely be present. This matches the J/NB localization (Section 3): each stratum is individually coverable
+and only the joint, signed matching is over-determined. It also explains why our only rigorous non-membership
+is the exact dual certificate, not a counting bound: width/counting is the wrong tool, and the algebraic
+(certificate / normal-form) route is the right one. That is the redirected target.
