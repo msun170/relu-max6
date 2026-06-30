@@ -36,4 +36,18 @@ is near the edge; >2-generator or weight-8 families are unenumerable (same wall 
 search effectively ends at weight-4; beyond it is the BBHSY/Cayley THEORY construction or the decomposition polyhedron.
 
 ## Status / results
-[dyadic_search.py root version + <=4v: results appended when they land]
+- dyadic_search.py ROOT version (joins of two <=2-gen ROOT zonotopes, <=6 verts, 6081 orbits): max_7 OUT (rank 880,
+  two primes, sym-control OUT, valid). CAVEAT: ROOT generators only (L1<=2). BBHSY's max_5 ALSO uses NON-root short
+  generators (e.g. 2e_5-(e_1+e_2), L1=4 in max(2x5,x1+x2)), so this OUT does NOT cover the full BBHSY-complexity
+  family. The L1<=4 (non-root) version has ~66549 zonotopes -> joins explode -> not completely enumerable as-is;
+  needs a targeted non-root generator set.
+- <=4v (all 4-vertex blocks, 29024 orbits): running.
+
+## Honest convergence
+Every FEASIBLE complete weight-4 dyadic lattice family tested is OUT: <=2v, <=3v, root <=2-gen-<=6v. The non-root
+BBHSY family and <=4v remain (running / partially walled). The pattern strongly suggests max_7 is OUT of all feasible
+weight-4 lattice families -> the construction, if it exists, needs weight-8 (finer dyadic, unenumerable) or the
+THEORY route (generalize BBHSY's Cayley/mixed-subdivision of Delta_6, or the decomposition-polyhedron vertex search).
+The brute lattice search is reaching its limit; the genuine next step is the Cayley subdivision theory (hard) -- OR
+accept that all computational evidence (every feasible OUT) leans toward max_7 NOT being 2-layer, while noting we
+CANNOT prove that (no real lower-bound tool; AHM mod-2 only kills odd-denominator).
