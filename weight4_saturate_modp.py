@@ -68,7 +68,10 @@ def membership(P):
             tmp = A[r].copy(); A[r] = A[piv]; A[piv] = tmp
         A[r] = (A[r] * pow(int(A[r, c].item()), P-2, P)) % P
         if r+1 < rows:
-            f = A[r+1:, c]; A[r+1:] -= cp.outer(f, A[r]); A[r+1:] %= P
+            row = A[r]; B = 6000                       # chunked outer-product update to bound peak memory
+            for s in range(r+1, rows, B):
+                e = min(s+B, rows); f = A[s:e, c]
+                A[s:e] -= cp.outer(f, row); A[s:e] %= P
         r += 1
         if c % 3000 == 0: print(f"  [p={P}] col {c}: rank {r}  [{time.time()-t0:.0f}s]", flush=True)
         if r == rows: break
