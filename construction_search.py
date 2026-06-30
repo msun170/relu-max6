@@ -81,8 +81,10 @@ def test_level(maxv, NCAP=7000):
     print(f"    rank={r1}/{m} | max_7 {verdict} | sym-control {'IN(VACUOUS!)' if si1 else 'OUT(ok)'} | valid={valid}  [{time.time()-t0:.0f}s]", flush=True)
     return (mi1 and mi2)
 
-print(f"weight-4 lattice {NP} pts, m={m}. Testing COMPLETE <=k-vertex P2 families (every <=k-subset is a 2-layer block).", flush=True)
-for mv in (2, 3, 4):
-    if test_level(mv) is True:
+NCAP = int(os.environ.get("NCAP", "7000"))
+LEVELS = [int(x) for x in os.environ.get("LEVELS", "2,3,4").split(",")]
+print(f"weight-4 lattice {NP} pts, m={m}, NCAP={NCAP}, levels={LEVELS}. COMPLETE <=k-vertex P2 families.", flush=True)
+for mv in LEVELS:
+    if test_level(mv, NCAP) is True:
         print("  *** exact IN -- stop and extract construction ***", flush=True); break
 print(f"[{time.time()-t0:.0f}s] done. (<=4v = the point/segment-join family ~2.9e4 orbits = enumeration wall.)", flush=True)
