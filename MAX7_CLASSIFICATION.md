@@ -1,15 +1,21 @@
 # Classifying max_7 in the depth / closure / complexity hierarchy
 
-## KEY REFRAMING (2026-07-01): closure(V_2) is TRIVIAL -> the question is exact membership
+## KEY REFRAMING (2026-07-01): closure is NOT the object -> the question is exact membership
 
-ReLU nets with >=1 hidden layer are UNIVERSAL APPROXIMATORS (Leshno-Lin-Pinkus-Schocken 1993; ReLU is
-non-polynomial). V_1 subset V_2 is dense in C(compact). max_7 is continuous => **max_7 in closure(V_2)
-AUTOMATICALLY** -- no approximation theorem to prove (Path B is FREE/trivial). Consequences:
-- The floor collapse (0.032 -> 0.0002) is just universal approximation in action -- UNINFORMATIVE.
-- "Box B (closure \ V_2)" is NOT special; it is the GENERIC situation (max_3 not in V_1 but in closure(V_1) too).
-  As a SET, Box B = Box C: both just mean **max_7 not in V_2**. The only difference is the proof technique.
-- So the classification collapses to ONE binary question: **is max_7 in V_2 (Box A) or not (=> in V_3 \ V_2)?**
-  Closure / floors say nothing; the depth-separation question is the whole content.
+The whole content is binary: **is max_7 exactly in V_2, or in V_3 \ V_2?** Closure/floors are no longer useful.
+
+NUANCE on "closure is trivial" (homogeneous model, corrected 2026-07-01):
+- Our V_2 is the BIASLESS support-function model: every block h_Q(x)=max_{g in Q}<g,x> is positively
+  homogeneous degree 1, so signed sums stay homogeneous. The ambient space is NOT C(compact); it is the
+  cone of positively-homogeneous-degree-1 CPWL functions (~ C(S^{n-1}) restricted to PL).
+- Leshno-Pinkus universal approximation is about nets WITH BIASES approximating ARBITRARY continuous
+  functions. It does NOT transfer for free to the biasless/homogeneous cone. So "max_7 in closure(V_2)
+  is automatic" was too glib.
+- What IS true: homogeneous CPWL = differences of support functions (DC decomposition), so the biasless
+  2-layer model with ARBITRARY polytope blocks contains max_7 in its span. But our blocks are the
+  RESTRICTED joins-of-two-zonotopes; density of THAT sub-cone on the slice is an unproven theorem.
+- Either way the operational conclusion is identical: **approximation floors are dead. Exact membership
+  is the whole problem.** Closure analysis is retired.
 
 
 
@@ -21,39 +27,45 @@ question is structural: **which box does max_7 belong to?**
 
 ```
 max_7 in V_3                               -- max_7 = max(max_6, x_7); max_6 is 2-layer (proven); one more max/ReLU step
-max_7 NOT in weight-2 V_2                  -- exact (two primes); floor 0.0308
-max_7 NOT in complete weight-3 V_2         -- exact (gpu_w3, two primes)
-max_7 NOT in clean low-complexity wt-4 V_2 -- exact (orbit_membership2, two primes; the low-complexity symmetric span
-                                              saturates at rank ~902 and max_7 is exactly outside)
-max_7 ?in full V_2                         -- OPEN (full weight-4 near-full-dim, computationally walled)
+max_7 NOT in weight-2 V_2 (COMPLETE)       -- exact (two primes); floor 0.0308; family fully enumerated (small)
+max_7 NOT in complete weight-3 V_2         -- exact (gpu_w3, two primes); 19219 orbits, family fully enumerated
+max_7 NOT in SAMPLED low-complexity wt-4   -- exact (two primes) but for SAMPLED blocks only, NOT the complete family:
+   and SAMPLED point/segment wt-4 V_2          saturation check shows rank climbs 3298->5386 (m=8000), NOT plateaued,
+                                              so these wt-4 lattice families are high-dim and UNDERSAMPLED. OUT is
+                                              sound for the sampled blocks (OUT-at-points => OUT-as-function), but
+                                              "complete weight-4 family" is NOT decided. (orbit_membership2's old
+                                              "rank 902 saturated" was undersaturated -- corrected.)
+max_7 ?in full V_2 (real or lattice)       -- OPEN (weight-4 families high-dim/undersampled; real model needs normal form)
 max_7 ?in closure(V_2)                     -- floors get tiny but that is dense-span artifact, NOT proof
 ```
 
 The naive recursion max_7 = max(max_6, x_7) gives 3 layers (ReLU of a 2-layer object); a 2-layer construction would
 need a special polyhedral/valuation cover, not the recursion. (RESEARCH_LOG, STRUCTURE_MAX6.md.)
 
-## The three boxes (the whole game)
+## TWO boxes (the whole game; was three, closure box retired)
 
-### Box A: prove max_7 in V_2 (exact 2-layer construction exists)
+### Box A: prove max_7 in V_2 (exact 2-layer construction exists)  -- the IN route
 Likely HIGH-complexity, weight >= 4, diffuse (no small clean ansatz: OMP is diffuse, max_7 exactly OUT of clean
-low-complexity weight-4). Search path (NOT random floor minimization):
-  best approximant -> dominant orbit types -> impose S_7 symmetry -> rational reconstruction -> exact solve on a
-  chosen orbit family -> chamber verifier (like max_6).
-Status: OMP says the approximant is diffuse (250 raw blocks, 205 distinct orbit types) -> small-construction route
-looks BAD. A high-complexity construction is not ruled out but has no positive evidence.
+low-complexity weight-4). The ONLY useful IN route now is TEMPLATE MINING, not floor minimization:
+  best approximant -> cluster selected blocks into a few combinatorial FAMILIES -> one symbolic coefficient per
+  family (S_7-equivariant) -> exact equality test -> rational reconstruct ONLY after family compression -> verifier.
+DECISION RULE (omp_family_cluster.py): do <=10 families carry >=80% of the coefficient mass? yes -> pursue IN;
+no -> the IN route has no structure to exploit, switch to OUT theory.
+Status: OMP approximant is diffuse (250 raw blocks, 205 distinct orbit types) -> small-construction route looks BAD;
+family-clustering is the test of whether a LARGE structured ansatz exists.
 
-### Box B: prove max_7 in closure(V_2) \ V_2 (approximable, not exactly representable)
-Need an explicit convergent sequence F_w in V_2 with ||F_w - max_7|| -> 0 PLUS a singular (necessarily
-discontinuous) annihilating functional. Finite floors are NOT enough (density/ill-conditioning/unconverged-solver
-artifacts -- caught repeatedly in the log). Need an analytic recurrence or a density theorem.
-Status: floors shrink with weight, but this is the dense-span artifact; no analytic sequence found.
+### Box B: prove max_7 NOT in V_2 (=> in V_3 \ V_2; first real-weight depth separation)  -- the OUT route
+Finite exact obstructions (weight-2, weight-3, low-complexity weight-4 OUT) are not enough alone. Need a NORMAL-FORM
+theorem: every exact 2-layer rep of max_7 reduces to a bounded-complexity family; then the finite obstructions
+become a real lower bound. Baby lemma to start: every exact 2-layer rep of max_7 can be SYMMETRIZED into an
+S_7-invariant signed measure on P2 blocks (averaging over S_7; max_7 is S_7-invariant). Then generalize the
+weight-2 phenomenon (J feasible, NB feasible, J+NB infeasible) to: non-braid-wall cancellation + braid-wall
+matching forces bounded bridge complexity. This is the cleanest path to "max_7 needs 3 layers".
+Status: certificate-comparison (below) showed residual certificates do NOT stabilize and are precision-walled, so
+the lower bound will NOT come from residual functionals -- it needs the structural normal-form theorem.
 
-### Box C: prove max_7 in V_3 \ V_2 (first real-weight depth separation)
-Need a NORMAL-FORM theorem: every exact 2-layer rep of max_7 reduces to a bounded-complexity family. Then the exact
-finite obstructions (weight-2, weight-3, low-complexity weight-4 OUT) become a real lower bound. This is the cleanest
-path to "max_7 needs 3 layers", and the clean-construction break at n=7 is the strongest indirect support. But no
-real-weight lower-bound technique reaches n=7 (all known LBs are base-b volume args bottoming out ~n=10).
-Status: the most promising NEW idea is the OBSTRUCTION-CERTIFICATE comparison (below).
+(Closure box retired: approximation/closure is not discriminating; see KEY REFRAMING. The remaining question is
+exact membership, full stop.)
 
 ## The decisive experiment: obstruction-certificate comparison (certificate_compare.py)
 
