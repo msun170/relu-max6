@@ -84,6 +84,21 @@ artifact, not a global factorization. So the descent-via-bounded-local-moves rou
 (if one exists) must handle GLOBAL cancellation, not reduce it to bounded local moves. (This rules out a route; it
 does not disprove the normal form.)
 
+## RIGIDITY THESIS -- TESTED and FALSE (infinitesimal_rigidity_max6.py)
+Claim tested: are the max_5/max_6 reps ISOLATED (discrete) up to symmetry? Coefficient rigidity (the NB-circuit)
+only forces c given FIXED blocks; the deciding test is whether the BLOCK GEOMETRY can move. Treat every vertex of
+every orbit-rep block + coeffs + linear term as real variables, linearize the identity at the known construction:
+  max_5: tangent dim 37, gauge (scaling + diagonal-translation per block) 13 -> ESSENTIAL = 24.
+  max_6: tangent dim 49, gauge 14 -> ESSENTIAL = 35.
+So the reps are NOT infinitesimally rigid -- they sit on POSITIVE-DIMENSIONAL CONTINUOUS families (~24-35 essential
+deformations). Coefficient rigidity does NOT imply geometric rigidity. The "representations are discrete objects"
+reframing is FALSE. (Caveat: some essential dims may be redundant-parametrization freedom e.g. moving a non-extreme
+point; but that is still continuous freedom -> not rigid.)
+CORRECT picture (per the critique): exact reps form a SEMIALGEBRAIC FAMILY of vector configurations with circuit
+constraints -- continuous in block geometry, coefficients forced once geometry fixed. The right continuous object is
+the DECOMPOSITION POLYHEDRON (after fixing a complex): the known reps are extreme points / irreducible decompositions
+there. So the rigidity shortcut is closed; the problem stays a continuous/semialgebraic family.
+
 ## RETRACTED (do not revive)
 - Braid-spline module / Castelnuovo-Mumford regularity: grades by POLYNOMIAL DEGREE on a fixed fan, NOT by fan
   refinement / lattice weight (the ring action raises poly degree, not fan fineness). Schenck arXiv:1402.6924 is about
