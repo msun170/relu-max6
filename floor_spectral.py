@@ -6,8 +6,9 @@ import sys, itertools, time
 from math import gcd
 from functools import reduce
 import numpy as np
-import cupy as cp
 sys.path.insert(0, "C:/Users/nuswe/relu-max6")
+import gpu_init  # noqa: register cusolver DLLs before importing cupy
+import cupy as cp
 n = 7; t0 = time.time()
 SCR = "C:/Users/nuswe/AppData/Local/Temp/claude/C--Users-nuswe/b3e9435c-614f-431c-80ea-c7e9f45c3681/scratchpad"
 m = 26000
@@ -60,14 +61,12 @@ def spectral_floor(Anp, tag):
     nb = float(cp.linalg.norm(bM)); nr = float(cp.linalg.norm(bR))
     print(f"  {tag}: eigsum top, wmax={wmax:.3e}", flush=True)
     # spectrum: how many eigenvalues above each threshold
-    for tol in (1e-3, 1e-4, 1e-5, 1e-6):
+    for tol in (1e-3, 1e-4, 1e-5, 1e-6, 1e-7):
         keep = w > tol*wmax
         rank = int(keep.sum().item())
-        fM = float(cp.sqrt(cp.maximum(cp.asarray(0.0), (proj[keep]**2).sum() and (nb**2 - (proj[keep]**2).sum()))))/nb if rank>0 else 1.0
-        # safer: residual^2 = ||b||^2 - sum_kept proj^2
         res2 = nb**2 - float((proj[keep]**2).sum()); resR2 = nr**2 - float((projR[keep]**2).sum())
         fM = (max(res2,0.0)**0.5)/nb; fR = (max(resR2,0.0)**0.5)/nr
-        print(f"    tol={tol:.0e}*wmax: rank={rank:5d}  f(max7)={fM:.5f}  f(control)={fR:.4f}", flush=True)
+        print(f"    tol={tol:.0e}*wmax: rank={rank:5d}  f(max7)={fM:.6f}  f(control)={fR:.4f}", flush=True)
     del V, w; cp.get_default_memory_pool().free_all_blocks()
 
 lin = X.astype(np.float32)
