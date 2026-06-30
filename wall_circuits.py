@@ -1,3 +1,9 @@
+# !!! RETRACTED RESULTS WARNING (2026-07-01) !!! build_blocks() below generates an INCOMPLETE block family, so the
+# multi-weight "J+NB infeasible / Type-II=0" outputs from this script are FALSE NEGATIVES (an incomplete family makes
+# even known-IN cases look infeasible -- proven by wall_poscontrol.py: max_5,6 are FEASIBLE on the COMPLETE weight-2
+# family but build_blocks reports them INFEASIBLE). This file is kept ONLY as the method skeleton. For a valid (sound)
+# wall test use a COMPLETE family (see wall_poscontrol.py). Do NOT cite this script's weight 2/3/4 table.
+#
 # WALL-CIRCUIT MINING (user plan). Instead of function-value membership, decompose representability into WALL jumps.
 # A homogeneous PL function's gradient jumps across hyperplanes; the "jump" of orbit-sum OS_k across a probe (x0,d)
 # is the second difference  OS_k(x0+d) + OS_k(x0-d) - 2 OS_k(x0).  Split probes by direction d:
@@ -6,14 +12,14 @@
 # Exact representation in a family  <=>  exists block-coeff vector c with  J c = jt  AND  NB c = 0.
 # We compute, per family, the feasibility table: J alone, NB alone, J+NB; and the Type-II circuits (NB c=0, J c!=0)
 # and whether the max_n braid target lies in their image. All exact (integer -> mod-p).
-import sys, itertools, time
+import sys, itertools, time, os
 from math import gcd
 from functools import reduce
 import numpy as np
 sys.path.insert(0, "C:/Users/nuswe/relu-max6")
 import gpu_init  # noqa
 import cupy as cp
-n = 7; t0 = time.time()
+n = int(os.environ.get("WC_N", "7")); t0 = time.time()
 P1 = 2147483647
 roots = {tuple((1 if k==a else -1 if k==b else 0) for k in range(n)) for a in range(n) for b in range(n) if a != b}
 def prim(d):
@@ -68,13 +74,13 @@ def build_blocks(W, complete, n_sample, seed):
                 u = zon[i] | zon[j]
                 if len(u) <= 6: blocks.add(u)
     else:
-        seen = set()
-        while len(blocks) < n_sample:
+        seen = set(); stall = 0
+        while len(blocks) < n_sample and stall < 20000:
             u = zono() | zono()
-            if len(u) > 6: continue
+            if len(u) > 6: stall += 1; continue
             key = tuple(sorted(vi[p] for p in u))
-            if key in seen: continue
-            seen.add(key); blocks.add(frozenset(u))
+            if key in seen: stall += 1; continue
+            seen.add(key); blocks.add(frozenset(u)); stall = 0
     # dedup by S_n canon to get orbit reps (one column per orbit)
     import core
     reps = {}
@@ -164,7 +170,8 @@ def run_family(W, complete=False, n_sample=1500, seed=7, K_J=300, K_NB=400, nb_d
     print(f"\n=== weight {W} ({'COMPLETE' if complete else 'sampled '+str(N)+' orbits'}) | probes: {len(jt)} braid, {NBm.shape[0]} non-braid | N={N} blocks ===", flush=True)
     print(f"  J  alone  : rank(J)={rJ}, rank([J|jt])={rJt}  -> braid target {'FEASIBLE' if fJ else 'infeasible'}", flush=True)
     print(f"  NB alone  : rank(NB)={rNB}  (ker dim in block space = {N-rNB}; non-braid-cancelling combos exist)", flush=True)
-    print(f"  J + NB    : rank(M)={rM}, rank([M|t])={rMt}  -> {'FEASIBLE (max7 walls representable here!)' if fJNB else 'INFEASIBLE => OUT by wall obstruction'}", flush=True)
+    print(f"  J + NB    : rank(M)={rM}, rank([M|t])={rMt}  -> {'FEASIBLE (max_n walls representable here!)' if fJNB else 'INFEASIBLE => OUT by wall obstruction'}", flush=True)
+    print(f"  Type-II   : dim = rank([NB;J]) - rank(NB) = {rM - rNB}  (>0 needed to build any braid wall non-braid-cleanly)", flush=True)
     print(f"  CONTROLS  : in-family target {'FEASIBLE(ok)' if fCtrl else 'INFEASIBLE -- BUG!!'} | random target {'INFEASIBLE(ok)' if not fRand else 'FEASIBLE(VACUOUS!!)'}", flush=True)
     print(f"  VALID = {fCtrl and (not fRand)} (machinery sound iff in-family feasible & random infeasible)", flush=True)
     print(f"  [{time.time()-t0:.0f}s]", flush=True)
