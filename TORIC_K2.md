@@ -166,3 +166,31 @@ it enters as exact algebra on the Chow ring, **not** as an inequality on mixed v
 This is the productive outcome of the toric program: it does not yield the bound, and we can now say *precisely
 why* (multilinearity + density), which retires an entire elegant-looking family of attempts and concentrates the
 remaining effort on the one route the no-go leaves open -- a singular, scale-invariant annihilating functional.
+
+## 9. CAVEAT to the no-go: the density premise is not actually established (and if it fails, the separation is provable by a FINITE certificate)
+
+The no-go's teeth come entirely from the **density premise** `max_7 in closure(V_2)`, i.e. the residual floor
+`f_infty = dist(max_7, closure(V_2)) = 0`. A clean re-measurement undercuts that premise:
+
+- **Vacuity-safe column generation** (basis `k+n < 0.6 m`, `m = 9000`) gives the rigorous weight-2 floor
+  `f(2) = 0.0308` -- and this is EXACT (all 784 weight-2 blocks exhausted, no violator). The earlier "density
+  distance 0.0017 at weight-2" is **inconsistent** with this and was almost certainly a vacuity artifact (the
+  weight-3 vacuity traps in this exact pipeline are documented). So the number underpinning `f_infty = 0` is
+  unreliable.
+- Vacuity-safe floors at higher weight (capped runs, upper bounds): `f(3) <~ 0.0157`, `f(4) <~ 0.0115`. The
+  **between-weight gaps shrink fast** (`0.015` then `0.004`), which is the signature of a **positive** limit
+  `f_infty ~ 0.006 - 0.010`, not decay to `0`.
+
+**Consequence.** Whether `f_infty = 0` or `f_infty > 0` is genuinely open and is THE decisive question:
+  - If `f_infty > 0`: `max_7 notin closure(V_2)`, so `max_7` is **not** two-hidden-layer (the separation HOLDS),
+    and a **continuous** separating functional exists -- the no-go does NOT apply, and the bound is provable by a
+    finite certificate (the limiting dual of the column generation). This would be the first real-weight depth
+    separation for `max_n`.
+  - If `f_infty = 0`: density holds, the no-go applies, and only a singular certificate can work.
+
+So the no-go does not close the finite-certificate route after all -- it only closes it *under* the density
+premise, which the clean numbers call into question. The honest state: the trajectory leans (weakly) toward
+`f_infty > 0` (separation provable), but the true floors are computationally walled (a full-rank ~18866-block
+least-squares per weight), so a **reliable `f_infty` estimate is the single most valuable next computation** --
+a GPU full-family residual (or stabilized LSMR) at weights 3,4,5,6, watching whether the floor stabilizes
+(provable separation) or collapses toward 0 (singular certificate needed).
