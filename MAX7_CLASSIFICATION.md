@@ -1,5 +1,18 @@
 # Classifying max_7 in the depth / closure / complexity hierarchy
 
+## KEY REFRAMING (2026-07-01): closure(V_2) is TRIVIAL -> the question is exact membership
+
+ReLU nets with >=1 hidden layer are UNIVERSAL APPROXIMATORS (Leshno-Lin-Pinkus-Schocken 1993; ReLU is
+non-polynomial). V_1 subset V_2 is dense in C(compact). max_7 is continuous => **max_7 in closure(V_2)
+AUTOMATICALLY** -- no approximation theorem to prove (Path B is FREE/trivial). Consequences:
+- The floor collapse (0.032 -> 0.0002) is just universal approximation in action -- UNINFORMATIVE.
+- "Box B (closure \ V_2)" is NOT special; it is the GENERIC situation (max_3 not in V_1 but in closure(V_1) too).
+  As a SET, Box B = Box C: both just mean **max_7 not in V_2**. The only difference is the proof technique.
+- So the classification collapses to ONE binary question: **is max_7 in V_2 (Box A) or not (=> in V_3 \ V_2)?**
+  Closure / floors say nothing; the depth-separation question is the whole content.
+
+
+
 The right question is not "can a bigger weight-4/5 span fit max_7" (dead end: the span is near-full-dimensional, so
 sampling/elimination cannot resolve exact membership, and a small floor only means the family is dense). The right
 question is structural: **which box does max_7 belong to?**
