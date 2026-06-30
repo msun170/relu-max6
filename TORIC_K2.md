@@ -76,3 +76,48 @@ numbers (mixed volumes) `D_{Q_t}^2`, `D_{Q_t} . D_{max_n}`, etc. Find a quadrati
 the divisor classes that is `<= 0`-definite on the join sub-monoid but evaluates `> 0` on `D_{max_n}` at
 `n = 7`. The mixed-volume computations are finite and checkable for fixed n; this is the next concrete step,
 and it connects directly to the mixed-volume tools Bakaev et al already use for the upper bound.
+
+## 6. The matroid refinement (why an inequality can be WEIGHT-INDEPENDENT)
+
+The single hardest obstacle to a depth-2 lower bound is that the network **weight is unbounded**: the rank /
+membership test decides `max_n in span(weight-w joins)` for each fixed `w` (we proved OUT for `w = 2, 3`), but
+there are infinitely many `w`, and as `w -> infinity` the family becomes dense (`max_7 in closure`). A linear
+obstruction must therefore be re-proved at every weight and cannot, alone, close the problem. The reason to
+believe Hodge-Riemann is different is that it is **structural** rather than weight-graded, via matroids:
+
+- **The simplex is a matroid polytope.** `Delta_n = conv{e_i}` is the matroid polytope of the rank-1 uniform
+  matroid `U_{1,n}` (the hypersimplex `Delta_{1,n}`). So `D_{max_n}` is the divisor class of `U_{1,n}` on the
+  permutohedral variety.
+- **Zonotopes are matroid polytopes too.** A graphical zonotope (sum of root segments `[0, e_a - e_b]`) is the
+  matroid polytope of the corresponding graphic matroid; general zonotopes <-> representable matroids. A join
+  of two zonotopes is built from two matroids in complementary coordinate blocks.
+- **AHK Hodge theory is matroid-intrinsic.** Adiprasito-Huh-Katz prove Poincare duality, hard Lefschetz, and the
+  **Hodge-Riemann relations** for the Chow ring `A^*(M)` of ANY matroid `M` -- a property of the matroid, not of
+  any weight grading. The Hodge-Riemann inequalities (log-concavity of the characteristic polynomial, etc.) hold
+  for `U_{1,n}` and for every graphic matroid, uniformly.
+
+So the hoped-for obstruction has the right *type* to be weight-independent: a Hodge-Riemann inequality is a fixed
+algebraic inequality attached to the *matroid* of each piece, preserved under the join construction at **every**
+weight. If joins-of-graphic-matroid divisor classes satisfy an AHK inequality that the `U_{1,n}` class violates
+for `n >= 7`, the violation cannot be repaired by raising the weight -- it is a property of `U_{1,n}` itself.
+This is precisely the ingredient the linear/rank route lacks. (It does not yet *prove* the bound -- the signed
+output sum still has to be controlled -- but it identifies a candidate obstruction of the correct, scale-free
+kind, and it ties the problem to a developed theory.)
+
+## 7. Computational infrastructure (built and validated, `intersection.py`)
+
+The degree-2 intersection numbers are mixed volumes, and these are concretely computable for our divisor
+classes. `intersection.py` builds them and validates against ground truth:
+
+- **Mixed-volume calculator** via the Minkowski-volume polynomial: `vol(s*D + A)` fit as a degree-`d` polynomial
+  in `s`, with `[s^2]` coefficient giving `V(D, D, A^{d-2})` (and polarization for the bilinear form).
+- **Validation:** `vol(permutohedron)` reproduces the exact value `n^{n-2} sqrt(n)` to machine precision
+  (`32.0000` at `n=4`, `279.5085` at `n=5`), confirming the calculator.
+- **Hodge-Riemann verified for our objects:** the degree-1 form `B(D, D') = V(D, D', A^{d-2})` (with `A` the
+  ample permutohedron) has signature **(+1, rest -)** -- Lorentzian, one positive eigenvalue -- over
+  `{D_{max_n}} u {join blocks}` at `n = 4, 5, 6`. This is the AHK Hodge-Riemann relation holding numerically for
+  exactly the classes in play, so the `n = 7` computation is a matter of scale, not of new theory.
+
+**Remaining (the research step):** find the specific AHK inequality on the matroid Chow ring that separates
+`U_{1,n}` from the graphic-join sub-monoid at `n = 7`. The infrastructure to test candidate inequalities now
+exists; the search for the right one is the open problem.
