@@ -66,6 +66,23 @@ VERDICT: the certificates COLLAPSE rather than converge -> points to BOX B (max_
 likely not exactly representable). Does NOT yield a stable certificate for a clean lower bound (Box C). The
 "interesting separation" (in closure, not in the set) is the most consistent classification.
 
+## RESULT of Test 1 (r_3 stability, test1_r3_stability.py, 2026-07-01)
+
+Pairing |cos(r_3, h_Q)| over sampled blocks (with the weight-3 control = float32 noise floor):
+  weight-3 CONTROL (should be 0): max 0.0018, mean 0.0012  <- this is the float32 NOISE FLOOR
+  weight-4 root: 0.0020 / 0.0012;  weight-4 non-root: 0.0019 / 0.0011;  weight-5: 0.0018 / 0.0011
+All weight-4/5 pairings sit AT the control noise floor => r_3 (||r3||/||b||=0.000184) is BELOW float32 resolution;
+its direction is noise-dominated. Cannot test whether weight-4 kills r_3. The CERTIFICATE ROUTE IS PRECISION-WALLED
+(float64 QR OOMs on 16 GB). Robust takeaway: max_7 is approximated by complete weight-3 to within ~1e-4 (exactly OUT
+by mod-p), a >150x collapse from weight-2. => BOX B (closure) reinforced; BOX C blocked two ways (certificates do
+not stabilize AND are below resolution). A depth lower bound for max_7 will NOT come from residual certificates --
+it needs the structural normal-form theorem (Box C, hard theory).
+
+Test 2 (exact r_3): the natural certificate is the min-norm residual; exact rational over rank-18866 is infeasible,
+and a mod-p certificate has no norm/direction. Feasible only on small restricted families (large floor, float32
+already suffices) -- not the interesting tiny obstruction. Test 3 (nested rate): weight hierarchy not cleanly nested
+(different lattices) + complete weight-4 walled -> a DEFINED convergent sequence past weight-3 is out of reach.
+
 ## Strongest honest statement right now
 max_7 is definitely in V_3; it is excluded from every CLEAN low-complexity 2-layer family tested (weight-2,
 weight-3, low-complexity weight-4), exactly; whether it is in full V_2 is the open frontier. The clean-construction
