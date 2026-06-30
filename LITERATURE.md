@@ -100,6 +100,33 @@ CONSTRUCTION (max_7 in V_2) -- the cleanest target:
   (single-layer) realizable. Both are rational by Schrijver once the complex is fixed.
 NORMAL FORM (AHM Question 18, S=Q): if provable, rational==real and our exact rational/lattice tests become decisive.
 
+## 7. VALUATION ROUTE worked out (2026-07-01): the DYADIC-NECESSITY refinement
+Applying AHM's volume-mod-p valuation (arXiv:2502.06283 Thm 2) to max_7 directly:
+  MAX_m = max(x_1..x_m) = F_{m-1}, so it needs >= ceil(log_p m) hidden layers for N-ary weights, p prime, p NmidN.
+  MAX_7: ceil(log_2 7) = 3. So with p=2 (i.e. ODD-denominator or INTEGER weights), **MAX_7 needs >= 3 layers --
+  ALREADY PROVEN by AHM's mod-2 valuation.** The only prime that bites is p=2 (p=3 gives ceil(log_3 7)=2, no force).
+  To have MAX_7 in 2 layers one must AVOID p=2, i.e. use EVEN-DENOMINATOR (2|N) weights.
+
+CLEAN CONSEQUENCE (n>=5, since ceil(log_2 n)>=3): **any 2-hidden-layer max_n is necessarily EVEN-DENOMINATOR /
+DYADIC; it cannot be integer or odd-denominator.** Confirmed by data: BBHSY's MAX_5 is dyadic (powers of 2); OUR
+MAX_6 construction has denominators 90, 180 (both even). MAX_4 (ceil(log_2 4)=2) is the last one realizable with
+integer weights (binary tree).
+
+WHY THIS MATTERS (both directions):
+- LOWER BOUND: the valuation route is now SHARP -- AHM's mod-2 already kills odd/integer max_7; the OPEN piece is to
+  kill EVEN-DENOMINATOR (dyadic) max_7. But mod-2 valuations STRUCTURALLY CANNOT (even denominators are exactly what
+  escapes a mod-2 argument -- the lattice refines by 2). So a real lower bound needs a 2-ADIC / new invariant beyond
+  AHM. This is precisely why no real lower bound exists, and it is genuinely hard (open).
+- WHY OUR LATTICE OUTS CAN'T SETTLE IT: weight-w INTEGER-generator tests live in the integer/odd regime AHM already
+  handles. Our weight-2,3 and wt-4 <=2v,<=3v OUT are in HHL/AHM territory. The construction must be dyadic, i.e. on
+  a 2-refined lattice -- our weight-4 tests ARE that dyadic refinement of weight-2, and <=4v (running) is the live
+  dyadic construction probe.
+- CONSTRUCTION: search DYADIC / even-denominator coefficients specifically (BBHSY MAX_5 template is dyadic).
+
+NET: "trying the valuation route" yields not a lower bound but the DYADIC-NECESSITY theorem (a clean, citable
+refinement) + the precise open frontier ("kill dyadic max_7", a 2-adic problem) + a sharpened construction target
+(dyadic). The lower bound is hard-open; the dyadic construction is the favored concrete direction.
+
 ## Key PDFs saved (scratchpad)
 bakaev.pdf (2505.14338), averkov.pdf (2502.06283), maxout.pdf (2510.14068), abd.pdf (0810.3947),
 polyalg.pdf (2009.05876), and the Zhang-Naitzat-Lim + 2410.04907 fetches.
