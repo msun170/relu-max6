@@ -43,7 +43,7 @@ def rz():  # random NON-root weight-4 zonotope (at least one non-root generator)
             if added >= 4 or len(verts) >= 14: break
     return [vidx[v] for v in verts] if len(verts) >= 2 else None
 
-K = 14000
+K = 6000
 Zc = cp.empty((m, K), dtype=cp.float32); cnt = 0
 while cnt < K:
     idx = rz()
@@ -51,13 +51,15 @@ while cnt < K:
     Zc[:, cnt] = P[:, idx].max(axis=1); cnt += 1
     if cnt % 4000 == 0: print(f"  nonroot zono {cnt}/{K}  [{time.time()-t0:.0f}s]", flush=True)
 perm = cp.asarray(rng.permutation(K)); J = cp.maximum(Zc, Zc[:, perm])
-NR = cp.concatenate([Zc, J], axis=1)
-print(f"non-root weight-4 cols: {NR.shape}  [{time.time()-t0:.0f}s]", flush=True)
-
-A = cp.concatenate([cp.asarray(C3), cp.asarray(C4), NR, cp.asarray(X.astype(np.float32))], axis=1)
-cn = cp.linalg.norm(A, axis=0); cn = cp.where(cn>0, cn, cp.float32(1.0)); A = A/cn
+NRcpu = np.concatenate([cp.asnumpy(Zc), cp.asnumpy(J)], axis=1)
+del Zc, J, P; cp.get_default_memory_pool().free_all_blocks()
+A_cpu = np.column_stack([C3, C4, NRcpu, X.astype(np.float32)])   # assemble on CPU
+del NRcpu
+print(f"non-root weight-4 added; combined A {A_cpu.shape} (CPU)  [{time.time()-t0:.0f}s]", flush=True)
+A = cp.asarray(A_cpu); del A_cpu
+cn = cp.linalg.norm(A, axis=0); cn = cp.where(cn>0, cn, cp.float32(1.0)); A /= cn   # in place
 An = float(cp.linalg.norm(A))
-print(f"combined A {A.shape}  [{time.time()-t0:.0f}s]", flush=True)
+print(f"on GPU, normalized  [{time.time()-t0:.0f}s]", flush=True)
 
 def cgls(bnp, tag):
     bg = cp.asarray(bnp); bn = float(cp.linalg.norm(bg))
