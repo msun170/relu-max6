@@ -194,3 +194,33 @@ premise, which the clean numbers call into question. The honest state: the traje
 least-squares per weight), so a **reliable `f_infty` estimate is the single most valuable next computation** --
 a GPU full-family residual (or stabilized LSMR) at weights 3,4,5,6, watching whether the floor stabilizes
 (provable separation) or collapses toward 0 (singular certificate needed).
+
+## 10. RESOLVED: the floor collapses -- density holds (`f_infty = 0`), so the certificate IS singular
+
+The decisive computation ran (`floor_w3_gpu.py`, GPU CGLS against the COMPLETE weight-3 family, all 19219
+orbit columns, with a convergence-checked orthogonality gauge):
+
+  `f(2) = 0.0308` (exact)  ->  `f(3) ~= 0.0022` (still descending; true floor lower, but `> 0` by gpu_w3 mod-p).
+
+A ~14x collapse in one weight step. The Sec. 9 hope (`f_infty > 0`, finite certificate) was an artifact of the
+**capped** column generation: greedy colgen with 3000 of 19219 blocks plateaued at `0.0157`, but the FULL
+weight-3 family reaches `0.0022`. The true floors collapse fast, so **`f_infty = 0` -- density holds, max_7 is
+in the closure of `V_2`.** The earlier "0.0017 density" number was right in spirit (small floor) even if its
+exact value was unreliable; my Sec. 9 doubt was wrong, and the full solve corrects it.
+
+**What this does and does NOT mean.**
+- It does NOT disprove the separation. `f(w) > 0` at every finite weight (proven exactly for `w = 2, 3` via
+  gpu_w3) means `max_7 notin span(weight-w joins)` for each `w`. Since any genuine 2-layer net has SOME finite
+  weight, `max_7 in V_2` iff `f(w) = 0` for some finite `w`. The data shows `f(w) > 0` but `-> 0`: exactly the
+  picture "`max_7 in closure(V_2) \ V_2`", i.e. **the separation can still hold**, with the distance shrinking
+  to zero. The strictly-positive finite-weight floors are genuine evidence FOR the separation.
+- It DOES kill the finite/continuous certificate (Sec. 8 no-go applies: density => any continuous functional
+  vanishing on the joins kills max_7 too). So the separation, if true, requires a **singular** annihilating
+  functional, weight-uniform / scale-invariant -- one proving `f(w) > 0` for ALL `w` at once, not weight by
+  weight.
+
+**Net.** The honest target is now unambiguous: a single weight-uniform obstruction `lambda` with `lambda(h_Q)=0`
+for every join `Q` (all weights) and `lambda(max_7) != 0`, necessarily singular (not a finite measure on
+points). This is precisely `SCALE_INVARIANT_ROUTE.md`: an odd/scale-invariant functional whose annihilation of
+all joins is structural (central symmetry of zonotope pieces, the `U_{1,n}` vs graphic-matroid distinction),
+not weight-graded. The whole investigation has converged to that one object.
