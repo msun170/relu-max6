@@ -39,7 +39,32 @@ Also: the S_n-IRREP decomposition of the obstruction is necessarily TRIVIAL -- m
 restricts to symmetric reps, so the obstruction lives entirely in the trivial irrep (= the orbit-sum membership we
 already have). No extra structure there.
 
-## What a CORRECT tool would need to grade by (open)
+## THEOREM (new, clean): forced negativity via simplex indecomposability
+Use the support-function <-> Minkowski dictionary. Split a rep by sign:
+   h_Delta + sum_{c<0} |c_t| h_{Q_t} = sum_{c>0} c_t h_{Q_t} + linear   <=>   Delta + sum_neg |c_t| Q_t = sum_pos c_t Q_t.
+NONNEGATIVE case: if all c_t>=0 then sum c_t Q_t = Delta (Minkowski), so each Q_t is a Minkowski SUMMAND of Delta.
+A simplex (dim>=2) is Minkowski-INDECOMPOSABLE (Shephard/McMullen): its only summands are homothets lambda*Delta. And
+Delta_{n-1} is a join of two zonotopes only for n<=4 (= join of two segments = tetrahedron); for n>=5 the simplex's
+affinely-independent vertices cannot be covered by two centrally-symmetric (zonotope) vertex sets.
+=> THEOREM: for n>=5, max_n requires NEGATIVE coefficients in any 2-layer rep (genuine signed/virtual combination).
+Matches data exactly (n=4: 1 block, no neg; n=5,6: neg required).
+
+CONSEQUENCE -- this LOCALIZES the whole difficulty and identifies the correct grading:
+- NONNEGATIVE reps => weight BOUNDED (summands of Delta fit inside Delta, weight<=1). Trivial.
+- SIGNED reps: Delta + sum_neg Q_t = sum_pos Q_t; both sides can be ARBITRARILY LARGE as long as the negative side
+  cancels, so the Q_t have unbounded weight PURELY from cancellation. The entire obstruction is cancellation in a
+  VIRTUAL (signed) Minkowski identity.
+So the correct grading is by VIRTUAL-MINKOWSKI COMPLEXITY (not spline/polynomial degree, not plain weight): the right
+tool is the DECOMPOSITION POLYHEDRON (Brandenburg-Grillo-Hertrich arXiv:2410.04907), whose vertices are MINIMAL
+difference-of-convex (virtual) decompositions, bounded by Schrijver. That object IS graded by virtual complexity,
+which tracks weight.
+
+REMAINING GAP (stated honestly): the decomposition polyhedron bounds the minimal DC decomposition, but 2-layer-ness
+needs the convex parts to be SUMS OF JOINS. Minimal-in-DC-complexity != minimal-among-join-realizable. Closing this
+-- reduce a join-realizable signed rep to a minimal (bounded) one while STAYING join-realizable -- is the precise
+remaining theorem (and the precise form of W(n) finiteness).
+
+## What a CORRECT tool would need to grade by (superseded by the above)
 The bound is on FAN REFINEMENT / lattice dilation (weight), so candidate frameworks are those that grade polytopes
 by SIZE/dilation, not polynomial degree:
 - McMullen's polytope algebra graded by DIMENSION/dilation (the weight ~ the dilation factor of the blocks).
