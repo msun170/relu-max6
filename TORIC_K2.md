@@ -121,3 +121,48 @@ classes. `intersection.py` builds them and validates against ground truth:
 **Remaining (the research step):** find the specific AHK inequality on the matroid Chow ring that separates
 `U_{1,n}` from the graphic-join sub-monoid at `n = 7`. The infrastructure to test candidate inequalities now
 exists; the search for the right one is the open problem.
+
+## 8. NO-GO for the intersection-number route (the screen's real result), and the redirect
+
+Screening the Hodge / Alexandrov-Fenchel inequalities forced a sharp and important conclusion: **no intersection
+number can separate `max_n` from the join family.** The argument is one line, and the computation confirms it.
+
+**Lemma (intersection theory factors through `N^1`).** On the permutohedral variety `X(B_n)`, every top
+intersection number `D_1 . D_2 ... D_{d}` is a *symmetric multilinear* function of the numerical classes
+`[D_i] in N^1(X)_R`. Hence any quantity assembled from intersection numbers of a class `[D]` -- self-
+intersections, the Hodge-Riemann Gram matrix, AF defects, all of it -- is a function of the single class
+`[D] in N^1(X)_R`.
+
+**Corollary (collapse to the linear test).** Two-hidden-layer realizability of `max_n` is *exactly*
+`h_{Delta_n} in span_R{ h_Q : Q a join of two zonotopes }` -- the second-layer weights are unconstrained reals,
+so the support-function decomposition `max_n = sum_t c_t h_{Q_t}` is a plain linear relation in `N^1(X)_R`. If
+that relation holds, then `[D_{max_n}] = sum_t c_t [Q_t]` *as classes*, and every intersection-theoretic
+identity for `max_n` is automatically the same combination of the joins' -- nothing can be violated. So
+intersection theory detects non-representability **only** through `[D_{max_n}] notin span_R{[Q_t]}`, which is
+precisely the linear membership (rank) test we already run. Hodge-Riemann adds inequalities, but an inequality
+on a multilinear quantity still factors through the class, so it cannot see anything the span does not.
+
+**Why that kills the route: the density wall.** The span `{h_Q}` over *all* weights is dense at `max_n`
+(established earlier: `max_7` is approximable by join-combinations to distance `<= 0.0017`, the residual driven
+toward `0` as weight grows). A *continuous* linear functional vanishing on the span therefore vanishes on its
+closure, hence on `max_n`. So no continuous functional -- in particular no AF/Hodge-Riemann inequality on
+intersection numbers -- separates `max_n` from the joins.
+
+**The computation confirms it.** The AF / Hodge-index defect `delta(D) = B(A,D)^2 - B(A,A)B(D,D)` (normalized)
+for `D = max_n` is positive and **smooth across the representability boundary**: `3.69, 35.3, 539, ...` at
+`n = 4,5,6,...` with `n=5,6` representable and `n=7` the candidate non-representable case. There is no sign
+flip, no kink, no qualitative change where representability is supposed to fail -- exactly as the Lemma predicts.
+The Hodge structure is real (the Gram is Lorentzian at every `n`), but it is blind to the depth boundary.
+
+**Redirect (where the obstruction must live).** Proving `max_n notin span` (exactly, not approximately)
+requires a **discontinuous / unbounded** linear functional `lambda` with `lambda(h_Q) = 0` for all joins but
+`lambda(h_{Delta_n}) != 0` -- a *singular* measure / distribution certificate. Continuous certificates are ruled
+out by density; the certificate must exploit the **exact arithmetic** of `max_n` (rational vertex coordinates,
+parity / valuation data), not metric closeness. This is exactly the self-similar measure-annihilator program of
+`SCALE_INVARIANT_ROUTE.md`, now *sharpened by a proof that the annihilator is necessarily singular*. The matroid
+distinction `U_{1,n}` vs graphic matroids (Sec. 6) may still supply the certificate's exact defining data -- but
+it enters as exact algebra on the Chow ring, **not** as an inequality on mixed volumes.
+
+This is the productive outcome of the toric program: it does not yield the bound, and we can now say *precisely
+why* (multilinearity + density), which retires an entire elegant-looking family of attempts and concentrates the
+remaining effort on the one route the no-go leaves open -- a singular, scale-invariant annihilating functional.
