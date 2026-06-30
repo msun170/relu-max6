@@ -55,6 +55,62 @@ def rank_modp(A, Pm=P1):
 def feasible(M, t):
     return rank_modp(M) == rank_modp(cp.concatenate([M, t.reshape(-1, 1)], axis=1))
 
+def run_fast(n, K_J=400, K_NB=600):
+    # FAST GPU path: one representative block per orbit, evaluate via full-group-sum (= |Stab|*orbit-sum, same span,
+    # so feasibility is identical). Replaces the slow pure-Python member loop (which blows up as n! orbit sizes).
+    orb = family(n); okeys = list(orb); N = len(okeys)
+    W2 = core.weight2_points(n); vi = {p: i for i, p in enumerate(W2)}; NPt = len(W2)
+    reps = [next(iter(orb[k])) for k in okeys]              # one member set per orbit
+    perms = list(itertools.permutations(range(n))); Gn = len(perms)
+    pa = np.empty((Gn, NPt), dtype=np.int32)
+    for gi, g in enumerate(perms):
+        for i, p in enumerate(W2): pa[gi, i] = vi[tuple(p[g[k]] for k in range(n))]
+    pa = cp.asarray(pa)
+    braid1 = tuple((1 if k == 0 else -1 if k == 1 else 0) for k in range(n)); braid_t = tuple(sorted(prim(braid1)))
+    rng = np.random.default_rng(50 + n)
+    probes = []
+    for _ in range(K_J):
+        i, j = rng.choice(n, size=2, replace=False)
+        x = rng.integers(-12, 0, size=n).astype(np.int64); tt = int(rng.integers(3, 12)); x[i] = tt; x[j] = tt
+        d = np.zeros(n, dtype=np.int64); d[i] = 1; d[j] = -1; probes.append((x, d, True))
+    nbdirs = set()
+    for k in okeys:
+        for vs in orb[k]:
+            V = list(vs)
+            for a in range(len(V)):
+                for b in range(a+1, len(V)):
+                    dd = prim(tuple(V[a][q]-V[b][q] for q in range(n)))
+                    if tuple(sorted(dd)) != braid_t: nbdirs.add(dd)
+    nbdirs = list(nbdirs); rng.shuffle(nbdirs)
+    for _ in range(K_NB):
+        d = np.array(nbdirs[rng.integers(len(nbdirs))], dtype=np.int64)
+        x = rng.integers(-6, 7, size=n).astype(np.int64)
+        top = int(rng.integers(0, n)); x[top] = int(x.max()) + int(np.abs(d).sum()) + int(rng.integers(3, 8))
+        probes.append((x, d, False))
+    Ypts = []; trip = []
+    for (x, d, fl) in probes:
+        i0 = len(Ypts); Ypts.append(x+d); Ypts.append(x-d); Ypts.append(x); trip.append((i0, i0+1, i0+2, fl))
+    Y = np.array(Ypts, dtype=np.int64); PY = cp.asarray((Y @ np.array(W2, dtype=np.int64).T).astype(cp.int64))
+    def col_at_Y(vsset):
+        Vidx = [vi[p] for p in vsset]; Vc = cp.asarray(Vidx, dtype=cp.int32); k = len(Vidx); idx = pa[:, Vc]
+        return PY[:, idx.reshape(-1)].reshape(len(Y), Gn, k).max(axis=2).sum(axis=1)
+    cols = cp.stack([col_at_Y(r) for r in reps], axis=1)
+    bmaxY = cp.asarray(Y.max(axis=1).astype(cp.int64))
+    Jrows = []; jt = []; NBrows = []
+    for (ip, im, i0, fl) in trip:
+        row = cols[ip] + cols[im] - 2*cols[i0]; tgt = int(bmaxY[ip] + bmaxY[im] - 2*bmaxY[i0])
+        if fl: Jrows.append(row); jt.append(tgt)
+        else:
+            assert tgt == 0; NBrows.append(row)
+    Jm = cp.stack(Jrows); NBm = cp.stack(NBrows); jt = cp.asarray(jt, dtype=cp.int64)
+    M = cp.concatenate([NBm, Jm], axis=0); tt = cp.concatenate([cp.zeros(NBm.shape[0], dtype=cp.int64), jt])
+    rNB = rank_modp(NBm); rM = rank_modp(M); fJ = feasible(Jm, jt); fJNB = feasible(M, tt)
+    c0 = cp.asarray(np.random.default_rng(99).integers(-4, 5, size=N).astype(np.int64))
+    fctrl = feasible(M, M @ c0); frand = feasible(M, cp.asarray(np.random.default_rng(7).integers(-50, 51, size=M.shape[0]).astype(np.int64)))
+    expect = "FEASIBLE" if n <= 6 else "INFEASIBLE"; got = "FEASIBLE" if fJNB else "INFEASIBLE"
+    print(f"n={n}: complete wt-2 family N={N} | J feasible={fJ} | J+NB {got} (EXPECT {expect}) | Type-II dim={rM-rNB} | "
+          f"controls in-fam={fctrl} rand={frand} | {'OK' if got==expect else '*** METHOD BUG ***'}  [{time.time()-t0:.0f}s]", flush=True)
+
 def run(n, K_J=400, K_NB=600):
     orb = family(n); okeys = list(orb); N = len(okeys)
     braid1 = tuple((1 if k == 0 else -1 if k == 1 else 0) for k in range(n))
@@ -111,4 +167,4 @@ def run(n, K_J=400, K_NB=600):
           f"Type-II dim={rM-rNB} | controls in-fam={fctrl} rand={frand} | {'OK' if got==expect else '*** METHOD BUG ***'}  [{time.time()-t0:.0f}s]", flush=True)
 
 for n in (int(x) for x in os.environ.get("PC_NS", "5,6,7").split(",")):
-    run(n)
+    run_fast(n)

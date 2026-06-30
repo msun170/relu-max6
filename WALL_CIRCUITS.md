@@ -22,12 +22,13 @@ SOUNDNESS REQUIRES A COMPLETE FAMILY. If F omits the blocks a construction uses,
 NB c=0 exactly, so a COMPLETE family containing it is always feasible -- no false negatives only when F is complete.)
 
 ## What actually holds (validated, wall_poscontrol.py, EXACT complete weight-2 family = verify_2layer's)
-    n=5  weight-2 (N=101):  J+NB FEASIBLE,  Type-II = 1,  controls valid   (EXPECTED feasible: max_5 is 2-layer)
-    n=6  weight-2 (N=128):  J+NB FEASIBLE,  Type-II = 1,  controls valid   (EXPECTED feasible: max_6 is 2-layer)
-    n=7  weight-2        :  EXPECTED INFEASIBLE (verify_2layer already proved max_7 has no weight-2 rep) [running]
-So on the complete weight-2 family the method is CORRECT: it tracks the known facts. The clean readout is the Type-II
-dimension: 1 for the representable cases n<=6 (the weight-2 construction is essentially UNIQUE), and it must drop to 0
-at n=7. That is a wall-theoretic restatement of the (already known) weight-2 separation -- correct, but not new.
+    n=5  weight-2 (N=101):  J+NB FEASIBLE,    Type-II = 1,  controls valid   (max_5 is 2-layer)
+    n=6  weight-2 (N=128):  J+NB FEASIBLE,    Type-II = 1,  controls valid   (max_6 is 2-layer)
+    n=7  weight-2 (N=136):  J+NB INFEASIBLE,  Type-II = 0,  controls valid   (max_7 has no weight-2 rep)
+On the complete weight-2 family the method is CORRECT and tracks the known facts exactly. The clean readout is the
+Type-II dimension: it is 1 for the representable cases n=5,6 (the weight-2 construction is essentially UNIQUE) and
+drops to 0 at n=7 -- a wall-theoretic restatement of the (already known) weight-2 separation. Correct, but not new.
+(Confirmed with the fast GPU full-group-sum path AND, for n=5,6, the slow member-exact path -- identical feasibility.)
 
 ## Honest assessment (does wall-circuit mining help?)
 - As a route to a NEW computational OUT for max_7: NO. Its columns are blocks, so a sound OUT needs a COMPLETE family,
