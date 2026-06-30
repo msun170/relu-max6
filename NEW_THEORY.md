@@ -77,11 +77,12 @@ max_5 (weight-2): 2 positive + 3 negative P2 blocks; non-braid bridge walls canc
 max_6 (weight-2): 3 positive + 3 negative; bridge walls cancel EXACTLY (300/300 = 0). Example cancellation across
   d=(0,0,1,-1,-1,1) is PAIRWISE: a +1/90 block and a -1/90 block have IDENTICAL jumps (12 each) -> cancel directly.
   This is the cleanest valuation-move structure (two blocks differing by a bridge that annihilates).
-=> The cancellation in Delta + N = M is NOT arbitrary: it decomposes into BOUNDED moves (pairwise + small-group).
-This is the descent prototype. NEXT: characterize EVERY non-braid wall's cancellation as a valuation move (pairwise
-or bounded group); if all are bounded-complexity moves, that bounds the bridge-wall complexity => bounded weight =>
-the missing theorem (for the symmetric case). Concretely: build the bipartite "wall-incidence" between positive and
-negative blocks and check it factors into small (bounded-size) cancelling groups.
+UPDATE -- the factorization is NEGATIVE (valuation_factorization_max6.py, WALL_VALUATION_MAX6.md): the cancellation
+does NOT factor into bounded valuation moves. The ONLY zero-sum subset of blocks is the FULL set (5 for max_5, 6 for
+max_6) -- the cancellation is GLOBALLY COUPLED / irreducible. The earlier "pairwise +1/90 vs -1/90" was a single-ROW
+artifact, not a global factorization. So the descent-via-bounded-local-moves route is CLOSED: a bounded-weight proof
+(if one exists) must handle GLOBAL cancellation, not reduce it to bounded local moves. (This rules out a route; it
+does not disprove the normal form.)
 
 ## RETRACTED (do not revive)
 - Braid-spline module / Castelnuovo-Mumford regularity: grades by POLYNOMIAL DEGREE on a fixed fan, NOT by fan
