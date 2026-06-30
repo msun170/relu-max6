@@ -36,8 +36,12 @@ identity and then average over the whole group G = S_n (|G| = n!):
 For each i, (1/|G|) sum_{sigma} h_{sigma^{-1} Q_i} = (|Stab(Q_i)|/|G|) * OrbitSum_{O(Q_i)}, an S_n-invariant
 function supported on the orbit O(Q_i); collecting equal orbits gives the coefficients a_O. The averaged linear part
 (1/|G|) sum_sigma ell_sigma is an S_n-invariant linear functional, and the only such functionals are multiples of
-x_1+...+x_n, giving d. Every block sigma^{-1} Q_i is a coordinate-permuted copy of Q_i, hence a join of two lattice
-zonotopes of identical vertex/generator counts: complexity is preserved. QED.
+x_1+...+x_n, giving d. Every block sigma^{-1} Q_i is a coordinate-permuted copy of Q_i, hence a join of two REAL
+zonotopes of identical combinatorial complexity: complexity is preserved. IF the original block class is lattice,
+the symmetrized blocks remain lattice (S_n permutes lattice points to lattice points). QED.
+
+(The "real" wording matters: Lemma 1 holds in Real-V_2 and does NOT secretly assume a lattice rep. The lattice
+property is preserved only when it was present to begin with; symmetrization never CREATES it.)
 
 CONSEQUENCES (why this matters) -- and the LIMIT of Lemma 1 (correction 2026-07-01):
 (a) WLOG every exact rep IN A GIVEN S_n-STABLE BLOCK CLASS is orbit-summed. Within a FIXED finite lattice family,
@@ -78,16 +82,24 @@ decision. That discretization is the actual hard content.
 So the OUT route is cleanly reduced to ONE theorem: real exact 2-layer reps of max_n, if they exist, convert to
 bounded lattice/enumerable P2 reps. Everything else we built (symmetrization, exact finite decision) is the
 machinery that becomes decisive the moment that theorem exists. This is the clean target for Hertrich's group --
-their polyhedral-subdivision / valuation machinery (BBHSY identity (P u Q)+(P n Q)=P+Q) is exactly the tool for
-producing such a discretizing normal form.
+their polyhedral-subdivision / valuation machinery (BBHSY-style valuation moves on compatible subdivisions; see the
+careful statement below) is exactly the tool for producing such a discretizing normal form.
 
 ## Toward the finite normal form (three sharper targets, replacing the vague "complexity bound")
 
-1. REAL-TO-LATTICE NORMAL FORM (strongest useful lemma). Prove: if an S_n-invariant exact rep of max_n exists with
-   REAL P2 blocks, then one exists with RATIONAL/LATTICE P2 blocks of bounded weight. This is the bridge that makes
-   our finite exact tests decisive. Likely mechanism: the wall-cancellation constraints are LINEAR with integer
-   coefficients in the block parameters, so a real solution implies a rational one (then clear denominators ->
-   lattice). Pin down the linear system whose solvability = representability and show its defining data is integral.
+1. REAL-TO-LATTICE NORMAL FORM (strongest useful lemma) -- but the HARD part is the wall DIRECTIONS, not the
+   coefficients. NAIVE (too optimistic) version: "wall-cancellation constraints are linear with integer coefficients
+   in the block parameters, so a real solution implies a rational one." That is true only AFTER the geometry is
+   frozen (which vertex pairs are edges, which wall normals coincide). In Real-V_2 the wall NORMALS are themselves
+   real unknowns, so the representability problem is SEMIALGEBRAIC/continuous, not linear:
+       choose real generators -> choose which vertex pairs form edges -> choose which wall normals coincide ->
+       THEN solve linear cancellation equations.
+   The cancellation coefficients are linear once the combinatorial type is fixed, but the type/geometry varies
+   continuously. So the correct, WEAKER target is:
+       >>> WALL-DIRECTION FINITENESS:  in a MINIMAL exact representation of max_n, all surviving / mutually
+           cancelling non-braid wall DIRECTIONS are forced into a finite rational list. <<<
+   Once the wall directions are finite and rational, the remaining cancellation is linear-algebra over Q and our
+   exact lattice machinery takes over. Forcing the directions finite/rational is the actual hard content.
 
 2. MINIMAL-SUPPORT RIGIDITY / DESCENT (best theoretical route). Assume a counterexample max_7 = sum_O a_O OrbitSum_O
    + d*sum_i x_i; pick one of MINIMAL total complexity (or minimal support). Prove: any non-braid wall introduced by
@@ -142,7 +154,10 @@ phenomenon. The concrete descent target is therefore:
         with rationality of the linear cancellation equations, onto a bounded-weight lattice) -- i.e. it IS the
         finite normal form. <<<
 
-This connects the OUT route to BBHSY's valuation machinery directly: the identity (P u Q) + (P n Q) = P + Q is the
-canonical bridge-cancellation move (it trades a join P u Q for lower-complexity pieces P, Q, P n Q). The conjecture
-is that iterating such moves reduces any exact rep to bounded complexity. That is the theorem to prove with the
-Hertrich group.
+This connects the OUT route to BBHSY's valuation machinery. State the identity CAREFULLY: at the support-function
+level  max(h_P, h_Q) + min(h_P, h_Q) = h_P + h_Q  is tautological, but min(h_P, h_Q) is NOT in general the support
+function of P n Q (that needs compatible subdivisions / the right hypotheses). So do not invoke
+"(P u Q) + (P n Q) = P + Q" as a universal polytope identity. SAFE statement: BBHSY-style valuation identities trade
+a join/max term against lower-complexity pieces ON COMPATIBLE SUBDIVISIONS. The OUT conjecture is that all bridge
+cancellations in an exact max_n representation can be GENERATED by such valuation moves. That is the theorem to
+prove with the Hertrich group.
