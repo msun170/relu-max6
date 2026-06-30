@@ -1,94 +1,91 @@
-# New theory: a bounded-weight normal form for max_n (our own program)
+# New theory for max_n in V_2: the virtual-Minkowski program
 
-The general normal-form question (real -> rational at fixed depth) is AHM Question 18, open. But max_n has maximal
-symmetry, and our data exposes a SHARP, NARROWER phenomenon nobody has stated. We develop a max_n-SPECIFIC theory.
+The general normal-form question (real -> rational at fixed depth) is AHM Question 18, open. max_n has maximal
+symmetry, and our data exposes a sharper phenomenon. The spline-module route is DEAD (see retraction below); the
+virtual-Minkowski / decomposition-polyhedron route is alive, and is anchored by a real structural theorem.
 
-## The empirical foundation (exact)
+## Empirical foundation (exact)
 - max_2,3,4,5,6 are ALL representable on the WEIGHT-2 lattice (BBHSY max_5 weight-2; our max_6 weight-2, denom 90,180).
-- max_7 is exactly OUT of weight-2, weight-3, and weight-4 (<=2v, <=3v, root <=2-gen; <=4v running). [n=7,8 weight-2
-  exact confirmation running -> w2_transition]
-So there is a sharp transition: low max_n live at weight 2; max_7 does not.
+- max_7 is exactly OUT of weight-2, complete weight-3, and SEVERAL COMPLETE LOW-COMPLEXITY weight-4 SUBFAMILIES
+  (<=2v, <=3v, root <=2-gen <=6v). NOTE: we have NOT enumerated the complete weight-4 family, so do NOT say "OUT of
+  weight-4". max_7,8 also exactly OUT of weight-2.
+So: low max_n live at weight 2; max_7 does not, and (theorem below) for n>=5 any rep is genuinely signed.
 
-## The conjecture (ours)
-**BOUNDED-WEIGHT NORMAL FORM (for max_n).** If max_n in V_2 (real weights), then max_n is representable by an
-S_n-symmetric signed sum of joins-of-two-zonotopes whose blocks lie on the weight-<= W(n) lattice, with W(n) an
-EXPLICIT, slowly-growing bound.
+## THEOREM (proved): forced negativity via simplex indecomposability
+**Theorem.** For n >= 5, every two-hidden-layer support-function representation of max_n requires at least one
+NEGATIVE coefficient.
 
-Why plausible (unlike the general AHM Q18): (a) Lemma 1 (symmetrization) already restricts WLOG to S_n-orbit-summed
-reps; (b) max_n's normal fan is the braid fan, the coarsest possible, so a representing combination cannot need
-arbitrarily fine non-braid structure without it cancelling -- intuitively bounding the block complexity; (c) every
-known construction (n<=6) is weight-2; BBHSY's general method grows the subdivision only like log_3, suggesting W(n)
-grows slowly.
+Proof. Suppose h_Delta = sum_t c_t h_{Q_t} + ell with all c_t >= 0. A linear functional ell is the support function
+of a single point p (a translation), so h_Delta = h_{ sum_t c_t Q_t + p }, hence
+    Delta = p + sum_t c_t Q_t   (Minkowski).
+Thus each nonzero Q_t is a Minkowski summand of a TRANSLATE of the simplex. Simplices (dim >= 2) are
+Minkowski-INDECOMPOSABLE up to homothety/translation (Shephard; McMullen), so every nonzero Q_t is homothetic to the
+simplex. A homothet of Delta_{n-1} is a join of two zonotopes only when n-1 <= 3, i.e. n <= 4 (Delta_3 = join of two
+segments = tetrahedron; for n >= 5 the simplex's affinely-independent vertices cannot be covered by two
+centrally-symmetric zonotope vertex sets). Contradiction for n >= 5. QED.
 
-## THE REDUCTION (why this is the whole game)
-If the bounded-weight normal form holds with an explicit W(n), then **max_n in V_2 is DECIDABLE**: run the exact
-S_n-orbit-sum mod-p membership test over the complete weight-<=W(n) family.
-  - IN  => extract the dyadic rational certificate (extract_certificate.py) + chamber proof => max_n in V_2.
-  - OUT => max_n NOT in V_2 => the first real-weight depth lower bound.
-We have already decided weight <= 4 (OUT for n=7). So a proof of W(7) <= 4 INSTANTLY gives max_7 not in V_2. Even a
-larger explicit W(7) reduces the problem to a finite (if big) computation.
+Matches data exactly: n=4 used 1 block, NO negatives; n=5,6 REQUIRED negatives.
 
-## CORRECTION (2026-07-01): the braid-spline module does NOT bound weight (tool retracted)
-Initial proposal: bound W(n) via Castelnuovo-Mumford regularity of the Billera-Rose / Schenck braid-spline module.
-ON EXAMINATION THIS DOES NOT WORK. The spline module is graded by POLYNOMIAL DEGREE on a FIXED fan; the ring action
-(multiply by a linear form) raises polynomial degree but does NOT refine the fan. Our "weight" is FAN REFINEMENT
-(lattice dilation), a DIFFERENT parameter. So spline-module regularity bounds the wrong grading and does not give
-W(n). The framing conflated polynomial degree with weight. Tool retracted.
+## The conceptual shift (the key sentence): the obstruction is CANCELLATION in a virtual Minkowski identity
+By the theorem, for n >= 5 every representation is a SIGNED/VIRTUAL Minkowski identity
+    Delta + N = M,   where  M = sum_{c>0} c_t Q_t,  N = sum_{c<0} |c_t| Q_t   (both positive Minkowski sums of P2 blocks).
+Consequences:
+- NONNEGATIVE reps (N=0): each Q_t is a summand of (a translate of) Delta -> weight BOUNDED (weight <= 1). Trivial,
+  and impossible for n >= 5 by the theorem.
+- SIGNED reps: M and N can both be ARBITRARILY LARGE as long as the SIMPLEX APPEARS ONLY AFTER CANCELLATION
+  (M - N collapses to Delta). Neither side individually looks like a simplex. This is exactly why naive geometric
+  obstructions (central symmetry, volume, etc.) fail: they test one polytope, but the simplex emerges from the
+  difference. The whole difficulty is controlling this cancellation.
+So the correct grading is by VIRTUAL-MINKOWSKI COMPLEXITY -- not spline/polynomial degree, not plain weight.
 
-Also: the S_n-IRREP decomposition of the obstruction is necessarily TRIVIAL -- max_n is S_n-symmetric and Lemma 1
-restricts to symmetric reps, so the obstruction lives entirely in the trivial irrep (= the orbit-sum membership we
-already have). No extra structure there.
+## THE TOOL (right framework) and the precise remaining gap
+DECOMPOSITION POLYHEDRON (Brandenburg-Grillo-Hertrich, arXiv:2410.04907): for a fixed complex, the difference-of-
+convex (virtual Minkowski) decompositions of a CPWL function form a polyhedron whose VERTICES are the MINIMAL
+decompositions, bounded (Schrijver). This is the correctly-graded object (virtual complexity). BUT it is not yet
+enough: BGH bound minimal DC decompositions into convex CPWL pieces, whereas our M and N must each be SUMS OF JOINS
+of two zonotopes (an extra structural constraint).
+    >>> THE MISSING THEOREM (refined target): among the JOIN-REALIZABLE virtual decompositions of h_Delta, there is a
+        bounded-weight (minimal) representative. <<<
+i.e. minimal-DC != minimal-join-realizable; we need a minimal representative WITHIN the join-realizable ones.
 
-## THEOREM (new, clean): forced negativity via simplex indecomposability
-Use the support-function <-> Minkowski dictionary. Split a rep by sign:
-   h_Delta + sum_{c<0} |c_t| h_{Q_t} = sum_{c>0} c_t h_{Q_t} + linear   <=>   Delta + sum_neg |c_t| Q_t = sum_pos c_t Q_t.
-NONNEGATIVE case: if all c_t>=0 then sum c_t Q_t = Delta (Minkowski), so each Q_t is a Minkowski SUMMAND of Delta.
-A simplex (dim>=2) is Minkowski-INDECOMPOSABLE (Shephard/McMullen): its only summands are homothets lambda*Delta. And
-Delta_{n-1} is a join of two zonotopes only for n<=4 (= join of two segments = tetrahedron); for n>=5 the simplex's
-affinely-independent vertices cannot be covered by two centrally-symmetric (zonotope) vertex sets.
-=> THEOREM: for n>=5, max_n requires NEGATIVE coefficients in any 2-layer rep (genuine signed/virtual combination).
-Matches data exactly (n=4: 1 block, no neg; n=5,6: neg required).
+## THE PROGRAM (clean)
+1. Nonnegative P2 sums cannot represent max_n for n >= 5. [PROVED above]
+2. Hence every rep of max_n (n >= 5) is a virtual Minkowski identity  Delta + N = M.
+3. The key difficulty is controlling CANCELLATION in such identities when M, N are generated by joins of two zonotopes.
+4. A bounded-weight normal form follows IF every join-realizable virtual decomposition of Delta admits a bounded-weight
+   minimal representative.
+5. Fixed bounded-weight families are DECIDABLE by exact S_n-orbit-sum linear algebra (which we have). So step 4 =>
+   max_n in V_2 decidable; applied to our weight<=4 OUT data for n=7, potentially the first real-weight lower bound.
 
-CONSEQUENCE -- this LOCALIZES the whole difficulty and identifies the correct grading:
-- NONNEGATIVE reps => weight BOUNDED (summands of Delta fit inside Delta, weight<=1). Trivial.
-- SIGNED reps: Delta + sum_neg Q_t = sum_pos Q_t; both sides can be ARBITRARILY LARGE as long as the negative side
-  cancels, so the Q_t have unbounded weight PURELY from cancellation. The entire obstruction is cancellation in a
-  VIRTUAL (signed) Minkowski identity.
-So the correct grading is by VIRTUAL-MINKOWSKI COMPLEXITY (not spline/polynomial degree, not plain weight): the right
-tool is the DECOMPOSITION POLYHEDRON (Brandenburg-Grillo-Hertrich arXiv:2410.04907), whose vertices are MINIMAL
-difference-of-convex (virtual) decompositions, bounded by Schrijver. That object IS graded by virtual complexity,
-which tracks weight.
+## NEXT THEOREM TO TRY: a minimal virtual decomposition theorem (descent)
+Take an exact rep minimizing a complexity measure (lexicographically): (#P2 summands, then #vertices, then total
+lattice/denominator weight, then #non-braid bridge walls). Prove a DESCENT statement:
+  "If a highest-complexity bridge wall is present, a valuation move removes it or lowers complexity"
+  -> "every minimal join-realizable virtual decomposition of Delta has bridge-wall complexity bounded by n."
+This is the precise form of the bounded-weight normal form, in the virtual-Minkowski language.
 
-REMAINING GAP (stated honestly): the decomposition polyhedron bounds the minimal DC decomposition, but 2-layer-ness
-needs the convex parts to be SUMS OF JOINS. Minimal-in-DC-complexity != minimal-among-join-realizable. Closing this
--- reduce a join-realizable signed rep to a minimal (bounded) one while STAYING join-realizable -- is the precise
-remaining theorem (and the precise form of W(n) finiteness).
+## CONCRETE EXPERIMENT (supports the descent): dissect the max_5, max_6 virtual identity
+For our explicit max_5, max_6 reps, form  Delta + N = M  and compute: the positive side M, the negative side N,
+which NON-BRAID BRIDGE WALLS cancel between M and N, which valuation identities ((P u Q)+(P n Q)=P+Q on compatible
+subdivisions) explain each cancellation, and whether the rep is minimal in #P2 summands. If max_6 decomposes into a
+few recognizable valuation moves, that IS the prototype for the descent theorem. (virtual_dissect.py)
 
-## What a CORRECT tool would need to grade by (superseded by the above)
-The bound is on FAN REFINEMENT / lattice dilation (weight), so candidate frameworks are those that grade polytopes
-by SIZE/dilation, not polynomial degree:
-- McMullen's polytope algebra graded by DIMENSION/dilation (the weight ~ the dilation factor of the blocks).
-- The SECONDARY / FIBER POLYTOPE of subdivisions of the simplex (Billera-Sturmfels): the structure of all polyhedral
-  subdivisions of Delta, whose "fineness" is the weight; bounding the subdivision needed = a fiber-polytope statement.
-- A direct 2-adic / denominator bound (AHM-style) translated to a dilation bound.
-None of these is a ready off-the-shelf regularity result; the bounded-weight normal form genuinely lacks machinery.
-Honest status: the CONJECTURE + REDUCTION (below) are sound and valuable; the PROOF TOOL is open.
+## RESULT of the dissection (virtual_dissect.py): cancellation IS structured (descent prototype)
+max_5 (weight-2): 2 positive + 3 negative P2 blocks; non-braid bridge walls cancel EXACTLY (126/126 probes = 0).
+  One block (coeff -1/10, a 3-vertex triangle) has ZERO non-braid walls (a clean braid-only piece). Example wall
+  cancellation is 3-way: 1/15*5 - 1/30*2 - 1/30*8 = 0.
+max_6 (weight-2): 3 positive + 3 negative; bridge walls cancel EXACTLY (300/300 = 0). Example cancellation across
+  d=(0,0,1,-1,-1,1) is PAIRWISE: a +1/90 block and a -1/90 block have IDENTICAL jumps (12 each) -> cancel directly.
+  This is the cleanest valuation-move structure (two blocks differing by a bridge that annihilates).
+=> The cancellation in Delta + N = M is NOT arbitrary: it decomposes into BOUNDED moves (pairwise + small-group).
+This is the descent prototype. NEXT: characterize EVERY non-braid wall's cancellation as a valuation move (pairwise
+or bounded group); if all are bounded-complexity moves, that bounds the bridge-wall complexity => bounded weight =>
+the missing theorem (for the symmetric case). Concretely: build the bipartite "wall-incidence" between positive and
+negative blocks and check it factors into small (bounded-size) cancelling groups.
 
-## Two supporting sub-attacks (independent, also new)
-- WALL-DESCENT as a module syzygy: our wall taxonomy (joins inject non-braid bridge walls) is, in module language,
-  a statement about the relations (syzygies) among the generators. A finite generating set of syzygies (the
-  "valuation circuits") that lower complexity would give the descent => bounded weight. The Tits-algebra action
-  (Bastidas) is the tool to bound these syzygies.
-- SUBMODULAR-CONE FACE membership: max_n's simplex is a submodular function; zonotope (graphical) ones are a
-  sub-cone (faces). Bounded weight <-> the simplex's distance to the graphical sub-cone is realized by bounded
-  generators. (Coxeter submodular functions, arXiv:1904.11029.)
-
-## Status / next concrete steps
-1. [running] Confirm the weight-2 transition exactly at n=7,8 (foundation).
-2. Compute the S_n-irreducible decomposition of the weight-2 OBSTRUCTION at n=7 (the residual / dual certificate):
-   which S_7-irreps carry the obstruction. This identifies the module generators that "first fail" at n=7 -- the
-   seed of the generator-degree bound.
-3. Set up the braid-spline module Hilbert function for small n (n=3,4,5) and locate max_n's degree; look for the
-   pattern that predicts W(n).
-If a clean generator-degree bound emerges, we have a real theorem (decidability of max_n in V_2) -- and applied to
-our weight<=4 OUT data, potentially the first real-weight lower bound for max_7.
+## RETRACTED (do not revive)
+- Braid-spline module / Castelnuovo-Mumford regularity: grades by POLYNOMIAL DEGREE on a fixed fan, NOT by fan
+  refinement / lattice weight (the ring action raises poly degree, not fan fineness). Schenck arXiv:1402.6924 is about
+  multiderivations on type-A arrangements, not a weight/dilation filtration. Tool retracted.
+- S_n-irrep decomposition of the obstruction: necessarily TRIVIAL (max_n symmetric + Lemma 1 => obstruction in the
+  trivial irrep = the orbit-sum membership we already have). No extra structure.
