@@ -26,9 +26,12 @@ layers of arbitrary width. This resolves an open problem of Bakaev, Brunck, Hert
 Yehudayoff, who established the five-input case and explicitly left the six-input case open, and which is
 also listed as open in subsequent work. We give an explicit construction as a signed combination of six
 $S_6$-orbits of $P_2$ support functions with denominator $360$, together with an exact, floating-point
-free computer-assisted proof of correctness. We then give computational evidence that six is the exact
-threshold: $\max_7$ and $\max_8$ are not representable in the same family even after enlarging it, and we
-reduce the question of a genuine two-versus-three hidden-layer separation to a single normal-form lemma.
+free computer-assisted proof of correctness. We show that such a representation must use cancellation --- a
+signed Minkowski identity in which the simplex appears only after cancellation --- for all $n\ge 5$. We then
+give computational evidence that six is the exact threshold: $\max_7$ and $\max_8$ are not representable in
+the same family even after enlarging it. Finally we isolate the obstruction to a separation as a global,
+cross-chamber phenomenon by a single-chamber invisibility lemma, and reduce a genuine two-versus-three
+hidden-layer separation to a single lattice normal-form conjecture.
 \end{abstract}
 
 \section{Introduction}
@@ -95,6 +98,28 @@ accompanying file \texttt{construction\_max6.txt}. Each $R$ is a join of two wei
 $h_R$ is a two-hidden-layer function and the signed sum is two hidden layers. Expanding the six orbits
 over $S_6$ gives $1530$ individual $P_2$ terms.
 
+The construction uses negative coefficients, and this is unavoidable: the representation is a genuine
+\emph{virtual} (signed) Minkowski identity in which the simplex appears only after cancellation.
+
+\begin{proposition}[Necessity of cancellation]\label{prop:neg}
+For $n\ge 5$, every representation of $\max_n$ as a signed sum $\sum_t c_t h_{R_t}+\ell$ of support
+functions of two-way joins of zonotopes (with $\ell$ linear) has at least one negative coefficient.
+\end{proposition}
+
+\begin{proof}
+Suppose all $c_t\ge 0$. Writing $\ell=h_{\{p\}}$ for a point $p$, additivity gives
+$h_\Delta=h_{\,p+\sum_t c_t R_t}$, whence $\Delta = p+\sum_t c_t R_t$ as a Minkowski sum. Thus every
+nonzero $R_t$ is a Minkowski summand of a translate of $\Delta$. A simplex of dimension $\ge 2$ is
+Minkowski indecomposable up to homothety and translation (Shephard; McMullen), so each nonzero $R_t$ is
+homothetic to $\Delta$. But a homothet of the $(n-1)$-simplex is a two-way join of zonotopes only for
+$n\le 4$ (its $2$-faces are triangles, while a join of two zonotopes has centrally symmetric or
+segment $2$-faces once $n\ge 5$). This contradicts $n\ge 5$.
+\end{proof}
+
+For $n=4$ a single term (no negativity) suffices; $\max_5$ and $\max_6$ require cancellation. This is why
+single-polytope invariants (central symmetry, volume) do not obstruct: the obstruction lives in the
+cancellation, not in any individual body.
+
 \section{The proof of Theorem~\ref{thm:main}}
 
 We prove the displayed identity holds for all $x\in\RR^6$. Both sides are CPWL, so equality is equivalent
@@ -134,7 +159,7 @@ By (1)--(3) the construction's gradient equals $e_1$ on every cell of the chambe
 equals $x_1=\max_6$ throughout the chamber; by continuity and $S_6$-symmetry it equals $\max_6$ on all of
 $\RR^6$. No floating-point arithmetic appears in (2) or (3). \qed
 
-The certificate is reproduced by \texttt{prove\_max6.py}; an independent CPWL verifier agrees.
+The certificate is reproduced by \texttt{check\_max6.py}; an independent CPWL verifier agrees.
 
 \section{The threshold and a route to a separation}
 
@@ -169,13 +194,45 @@ the weight-2 lattice.
 
 Granting this, two-layer representability becomes a finite computation, and the $n=7$ negative becomes the
 statement that $\max_7$ requires three hidden layers, a separation of two from three hidden layers over the
-reals. We note that the conformity route is closed: the optimal shallow construction is provably not
-braid-conforming (indeed our $\max_6$ construction requires non-conforming blocks), consistent with the
-conditional bounds of Grillo, Hertrich, and Loho~\cite{GHL}. The relevant tools for the lattice normal
-form are the decomposition polyhedra of Brandenburg, Grillo, and Hertrich~\cite{BGH} and deformation-cone
-theory for the braid fan. Contemporary lower bounds are consistent with Theorem~\ref{thm:main}: \cite{HHL}
-is integer-weight only, \cite{AHM} is for finite-precision weights, \cite{GHL} is for braid-conforming
-networks, and \cite{Saf} is a width rather than depth bound at depth at least three.
+reals.
+
+The difficulty of the normal-form lemma has a clean structural source: the obstruction is invisible inside
+any single chamber of the braid arrangement. Let $D=\{x_1\ge\cdots\ge x_n\}$ be the closed fundamental
+chamber; on $D$ one has $\max_n=x_1$, a linear function.
+
+\begin{lemma}[Single-chamber invisibility]\label{lem:chamber}
+Let $\lambda$ be a finite signed combination of point evaluations, all at points of a single open braid
+chamber, and suppose $\lambda$ annihilates every linear function. Then $\lambda(\max_n)=0$. Consequently,
+any separating functional --- one with $\lambda(h_R)=0$ for all blocks $R$, $\lambda(\ell)=0$ for all
+linear $\ell$, and $\lambda(\max_n)\ne 0$ --- must use evaluation data from at least two braid chambers.
+\end{lemma}
+
+\begin{proof}
+On one open chamber $\max_n$ agrees with a single coordinate $x_{\sigma(1)}$, a linear function; since all
+evaluation points lie in that chamber and $\lambda$ kills linear functions, $\lambda(\max_n)=0$. The second
+statement is the contrapositive applied chamber by chamber.
+\end{proof}
+
+Thus the membership obstruction is a genuinely global, cross-chamber compatibility failure: the local
+linear pieces of $\max_n$ exist chamber by chamber but need not glue to a symmetric $P_2$ representation.
+This is borne out at the level of certificates: the exact rational functional witnessing
+Proposition~\ref{prop:max7} at weight~$2$ has minimal support $\operatorname{rank}+1$ spread across almost
+as many distinct braid chambers, with no sparse or single-chamber representative, exactly as
+Lemma~\ref{lem:chamber} predicts. It also explains why single-chamber or local-linear tests (and, in our
+experiments, low-order finite differences, wall relaxations, and mixed-volume comparisons) do not
+obstruct: they cannot see a cross-chamber phenomenon. (We caution that the Lemma rules out single-chamber
+certificates only; adjacent-chamber and higher-order tests can still detect finite-family obstructions.)
+
+The route this suggests is a global one. We note first that the conformity route is closed: the optimal
+shallow construction is provably not braid-conforming (indeed our $\max_6$ construction requires
+non-conforming blocks), consistent with the conditional bounds of Grillo, Hertrich, and Loho~\cite{GHL}.
+The relevant tools for the lattice normal form are the decomposition polyhedra of Brandenburg, Grillo, and
+Hertrich~\cite{BGH} --- the natural global object, in which two-layer representations are extreme
+decompositions and non-representability is emptiness of the $P_2$-restricted polyhedron --- and
+deformation-cone theory for the braid fan. Contemporary lower bounds are consistent with
+Theorem~\ref{thm:main}: \cite{HHL} is integer-weight only, \cite{AHM} is for finite-precision weights,
+\cite{GHL} is for braid-conforming networks, and \cite{Saf} is a width rather than depth bound at depth at
+least three.
 
 \begin{thebibliography}{9}
 \bibitem{ABMM} R.~Arora, A.~Basu, P.~Mianjy, A.~Mukherjee. Understanding Deep Neural Networks with

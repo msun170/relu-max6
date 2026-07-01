@@ -1,48 +1,51 @@
-# max6 in two hidden layers
+# max_6 in two hidden layers
 
-Two results about computing the maximum with shallow ReLU networks, kept as separate layers:
+**Theorem.** `max(x_1,...,x_6)` is exactly computable by a ReLU network with two hidden layers.
 
-- **Theorem 1.** `max(x1,...,x6)` is computable by a ReLU network with two hidden layers (exact proof).
-- **Theorem 2.** `max7` (and `max8`) has no two-hidden-layer representation whose building blocks have
-  weight-2 vertices (exact, with a checkable dual certificate). This is a finite-family lower bound, not
-  the full separation.
-- **Open conjecture.** Every two-hidden-layer `max_n` can be normalized into the weight-2 model. If true,
-  Theorem 2 gives the first two-versus-three hidden-layer separation over the reals.
+This resolves the `n = 6` case left open by Bakaev, Brunck, Hertrich, Stade, and Yehudayoff (*Better Neural
+Network Expressivity: Subdividing the Simplex*, STOC 2026), who proved the `max_5` case. The construction is
+a signed combination of six `S_6`-orbits of join-of-two-zonotope support functions (denominator 360, zero
+linear part), and correctness is established by an exact, floating-point-free computer-assisted chamber
+proof.
 
-Theorem 1 resolves an open problem of Bakaev, Brunck, Hertrich, Stade, Yehudayoff (STOC 2026), who proved
-the `max5` case and left `max6` open. See `WRITEUP.md` for the readable account.
+The paper is in [`paper/max6.tex`](paper/max6.tex). It also contains:
+- a **necessity-of-cancellation** theorem (for `n >= 5` every two-layer representation needs a negative
+  coefficient: the simplex appears only after cancellation in a signed Minkowski identity), and
+- a **single-chamber invisibility lemma** locating the obstruction to a `max_7` separation as a global,
+  cross-chamber phenomenon, with the reduction of a genuine two-vs-three-layer separation to a lattice
+  normal-form conjecture.
 
-## Check the theorems
+The `max_7` frontier investigation (OUT results, construction searches, obstruction probes) lives in the
+separate `relu-max7` repository.
+
+## Reproduce
 
 Requires Python 3 with `numpy` and `scipy`.
 
 ```
-python check_max6.py                      # Theorem 1: exact proof (the adjacency-closure step takes ~10 min)
-python check_weight2_max7_infeasible.py   # Theorem 2: verifies the exact dual certificate (~20 s)
+python verify_2layer.py        # exact rational construction + fresh-point check for max_4, max_5, max_6
+python check_max6.py           # the exact floating-point-free chamber proof of the max_6 theorem
+python min_virtual_decomp.py   # the minimal virtual Minkowski decomposition (dyadic 4:2:1 for max_5, max_6)
 ```
 
-Expected output of the first: `VERDICT: max6 IS computable in 2 hidden layers ...`.
-Expected output of the second: `RESULT: PASS -- max7 is not in the complete weight-2 two-layer span (exact).`
+`verify_2layer.py` prints, for each n, `EXACT MATCH => max_n IS 2 hidden ReLU layers`. `check_max6.py`
+produces the chamber certificate (the adjacency-closure step is the slow part).
 
 ## Files
 
 | file | role |
 |------|------|
-| `core.py` | shared engine: weight-2 lattice, zonotopes, S_n-orbit canonicalization, support functions, exact rational solve |
-| `construction.py` | the six-orbit max6 construction, expanded to its building blocks |
-| `make_p2_decompositions.py` | writes each orbit's explicit `conv(Z1 u Z2)` decomposition |
-| `check_max6.py` | Theorem 1: P2 decompositions, cell enumeration, exact gradient, exact adjacency closure |
-| `verify.py` | an independent exact verifier (separate code path) |
-| `build_max7_certificate.py` | builds the exact dual certificate for Theorem 2 |
-| `check_weight2_max7_infeasible.py` | Theorem 2: regenerates the family and verifies the certificate |
-| `lower_bound.py` | general-n weight-2 enumeration and exact membership test |
-| `search.py` | general-n search for a weight-2 construction |
-| `minimize.py` | minimize the construction (fewest orbit terms) |
-| `results/` | construction, proof certificate, max7 dual certificate |
-| `WRITEUP.md` | the readable account; `SEPARATION_PROGRAM.md` the research program for the conjecture |
+| `core.py` | shared engine: weight-2 lattice, zonotopes, `S_n`-orbit canonicalization, support functions, exact rational solve |
+| `verify_2layer.py` | exact rational construction of `max_4,5,6` as signed sums of `P_2` support functions, verified at fresh rational points |
+| `check_max6.py` | the exact, floating-point-free chamber proof of the `max_6` theorem |
+| `min_virtual_decomp.py` | minimal virtual Minkowski decomposition (decomposition-polyhedron min-mass vertex); dyadic 4:2:1 for `max_5,6` |
+| `paper/max6.tex` | the paper |
+| `results/construction_max6.txt` | the six orbit representatives (gradient/vertex sets) and coefficients |
+| `results/proof_certificate.txt` | the chamber-proof certificate |
+| `results/p2_decompositions_max6.json` | each orbit's explicit `conv(Z1 u Z2)` decomposition |
 
 ## Notes
 
 The construction uses rational weights, which is necessary: integer-weight ReLU networks provably need
-`ceil(log2 n)` hidden layers for `max_n` (Haase, Hertrich, Loho). Only two-way joins are valid
-two-hidden-layer building blocks; a three-way join is three layers.
+`ceil(log2 n)` hidden layers for `max_n` (Haase, Hertrich, Loho, ICLR 2023). Only two-way joins of zonotopes
+are valid two-hidden-layer building blocks; a three-way join is three layers.
