@@ -27,7 +27,14 @@ WT = [int(x) for x in os.environ.get("WEIGHTS", "4,5,6").split(",")]
 KPER = int(os.environ.get("KPER", "1600"))
 m = int(os.environ.get("M", "8000"))
 X = np.random.default_rng(101).integers(-16, 17, size=(m, n)).astype(np.int64)
-bmax = cp.asarray(X.max(axis=1).astype(np.int64))
+TARGET = os.environ.get("TARGET", "max7")
+Xsort = np.sort(X, axis=1)[:, ::-1]   # descending order statistics
+if TARGET == "max7":  tgt = X.max(axis=1)
+elif TARGET == "s2":  tgt = Xsort[:, 0] + Xsort[:, 1]                 # sum of top 2 (hypersimplex Delta(2,7))
+elif TARGET == "s3":  tgt = Xsort[:, 0] + Xsort[:, 1] + Xsort[:, 2]   # sum of top 3
+else: raise SystemExit("bad TARGET")
+print(f"TARGET = {TARGET}", flush=True)
+bmax = cp.asarray(tgt.astype(np.int64))
 Xs = np.sort(X, axis=1); bsym = cp.asarray((Xs * np.random.default_rng(5).integers(-9, 10, size=n)).sum(axis=1).astype(np.int64))
 lin = cp.asarray(X.astype(cp.int64))
 allcols = []; allblocks = []

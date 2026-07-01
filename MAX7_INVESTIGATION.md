@@ -86,6 +86,15 @@ approximation floor 0.032 -- so the weight-2 floor is precisely the Pascal-dista
 This completely characterizes the weight-2 obstruction, and is constructive (exact weight-2 formulas for 6x_(1)+x_(2)
 and the whole L_m family). To reach max_7 one must supply the transverse e_1 (m=7) direction, unavailable at weight-2.
 
+## EQUIVALENCE (from the lift): max_7 in V_2 <=> sum-of-top-2 (hypersimplex) in V_2
+Since L_6 = sum_i max_6([7]\{i}) = 6 x_(1) + x_(2) is EXACTLY weight-2 constructible and S_2 = x_(1)+x_(2) is the sum
+of the top two coordinates,  max_7 = x_(1) = (L_6 - S_2)/5.  As V_2 is closed under signed combination:
+    max_7 in V_2  <=>  S_2 in V_2  (and, via the lifts, <=> any single selection function).
+So option-1 ("supply the transverse e_1 direction") is NOT a computational shortcut -- it is EQUIVALENT to the
+original. BUT S_2 is the support function of the HYPERSIMPLEX Delta(2,7) = the uniform matroid U(2,7) polytope,
+whose combinatorics differ from the simplex; a construction may be more findable there (matroid star-mesh / Delta-Y
+route, Hertrich-Kober-Loho arXiv:2511.02406). construction_hunt.py TARGET=s2 tests this (weights 4,5). IN => max_7 IN.
+
 ## Positive construction hunt (construction_hunt.py) -- status
 Round 1: exact orbit-sum membership over a DIVERSE incomplete pool of 4800 blocks spanning weights 4,5,6 (weight-5,6
 never tested before): max_7 OUT (rank 1786/8000, control OK), residual floor 0.00080. Not an OUT proof (incomplete
