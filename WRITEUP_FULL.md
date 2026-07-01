@@ -70,6 +70,35 @@ All exact (two primes, S_7-orbit-sum membership, with random-symmetric controls 
   necessary conditions PASS while exact membership FAILS: the obstruction is HIGHER-ORDER, finer than the walls.
   (Control: n=6 weight-3 Type-II = 253, validating the machinery.)
 
+## 4.5 SINGLE-CHAMBER INVISIBILITY LEMMA and the global-gluing picture (new; the clean structural statement)
+LEMMA. Let D = {x_1 >= ... >= x_n} be the braid chamber; on D, max_n = x_1 is LINEAR. If a linear functional
+lambda (a finite signed sum of point evaluations) has all its evaluation points in a single open braid chamber and
+annihilates every linear function, then lambda(max_n) = 0.
+COROLLARY (certificates are cross-chamber). Any separating certificate -- lambda with lambda(h_Q)=0 for all blocks,
+lambda(x_i)=0 for all linear, lambda(max_n) != 0 -- must use data from at least two braid chambers.
+So the membership obstruction is a GLOBAL cross-chamber compatibility failure: local linear pieces of max_n exist
+chamber-by-chamber but need not glue to a symmetric P2 representation. SCOPE (do not overclaim): this rules out
+SINGLE-chamber certificates only; adjacent-chamber wall tests and higher-order finite differences can still detect
+finite-family obstructions.
+CONSEQUENCE for the dual certificate. At complete weight-2 the exact (floating-point-free) OUT certificate exists
+and is verified, but the minimal-support experiment shows its support is FORCED to be rank(M)+1 = 126 points with
+~200-DIGIT integer coefficients, spread over 123 distinct braid chambers (~one per chamber). So the raw dual
+certificate is a diffuse, cross-chamber basis artifact -- NOT a sparse/named local invariant. This is exactly what
+the Lemma predicts, and it is why we do NOT scale the raw certificate to weight-3.
+
+## 4.6 The minimal virtual decomposition (dyadic 4:2:1 template) and construction search (both negative for max_7)
+- MINIMAL VIRTUAL DECOMPOSITION (decomposition-polyhedron min-mass vertex, exact + verified): max_5 and max_6 each
+  have a 3+3 = 6-block minimal signed identity Delta + N = M with a DYADIC 4:2:1 coefficient pattern,
+  M = (4 Q_a + 2 Q_b + Q_c)/D and N = (4 Q_a' + 2 Q_b' + Q_c')/D (D = 240, 360). Consistent with dyadic-necessity;
+  suggestive but only two data points and vertex-choice dependent (NOT yet a theorem). max_4 = 2+1 blocks, D=48.
+- CONSTRUCTION SEARCH (disciplined: approximate -> propose support -> EXACT test -> chamber verify). Two runs:
+  (i) importance-ranked top-K supports over a weight-{3,4,5} pool (3600 blocks): max_7 OUT for all K up to 400,
+  LS floor 0.00078. (ii) true OMP over 4000 small (4-8v) blocks with exact test at each K: max_7 OUT for all K up
+  to 60; OMP residual descends smoothly (0.99 -> 0.0046 at 60 blocks) with NO collapse to 0 -- so max_7 is
+  approximable but NOT sparse in the pool; route A's clean 6-block dyadic sparsity does NOT reappear at n=7.
+  Both are pool-limited (random samples, not complete weight-4), so NEITHER is an OUT proof; together they push the
+  evidence further toward max_7 OUT.
+
 ## 5. The bounded-weight normal form (the open reduction)
 CONJECTURE (bounded-weight normal form for max_n). If max_n in V_2 then it is representable with all blocks on the
 weight-<= W(n) lattice, W(n) explicit.
@@ -91,26 +120,43 @@ Ruled OUT (each by a rigorous test):
 - Braid-spline module regularity: grades by POLYNOMIAL DEGREE on a fixed fan, not by lattice weight (fan refinement)
   -- wrong parameter. Retracted.
 - S_n-irrep decomposition of the obstruction: necessarily trivial (max_n symmetric).
-REMAINING (best-motivated):
-- MIXED VOLUMES / ALEKSANDROV-FENCHEL on Delta + N = M: the Section-4 finding localizes the obstruction as
-  HIGHER-ORDER (beyond codim-1 walls); mixed volumes are exactly the degree->=2 invariants that see this. A diagnostic
-  worth running (compute mixed-volume profiles of M,N,Delta for max_5/6; seek a quantity bounded for valid identities
-  but growing with weight). Honest caveat: homogeneity may let cancellation escape volume inequalities.
-- The bounded-weight / finite normal form via the DECOMPOSITION POLYHEDRON (Brandenburg-Grillo-Hertrich,
-  arXiv:2410.04907): the correct CONTINUOUS object (the reps are extreme decompositions there); gap = restrict to
-  join-realizable decompositions.
+- RAW DUAL CERTIFICATE as a named invariant: NO. At complete weight-2 the minimal certificate support is FORCED to
+  rank(M)+1 = 126 points (greedy removal over several orders all bottom out there; no structured shortcut), with
+  ~200-digit integer coefficients, over 123 braid chambers. Diffuse cross-chamber basis artifact (Section 4.5), not
+  a local invariant; not worth scaling to weight-3.
+- SINGLE-CHAMBER / local-linear certificates: impossible by the invisibility lemma (Section 4.5).
+- SPARSE / dyadic-template construction for max_7: NOT found. OMP + exact test over weight-{3,4,5} pools (routes
+  B and (a)) returns OUT at every support size; the max_5/6 6-block sparsity does not reappear. Pool-limited, not a
+  proof, but the sparse-construction hope is not realized.
+REMAINING (best-motivated), in priority order:
+- The finite normal form via the DECOMPOSITION POLYHEDRON (Brandenburg-Grillo-Hertrich, arXiv:2410.04907): the
+  correct CONTINUOUS/global object, and the frame the invisibility lemma says is NECESSARY (the obstruction is
+  cross-chamber). Membership = nonemptiness of the P2-restricted decomposition polyhedron; OUT = a face/vertex
+  certificate of emptiness. The OPEN question (our form of AHM Question 18): does emptiness PERSIST as the P2 family
+  grows to all real blocks? This is the primary theory route; no proof tool yet exists.
+- MIXED VOLUMES / ALEKSANDROV-FENCHEL on Delta + N = M: degree->=2 invariants that could see the higher-order
+  obstruction. Secondary diagnostic. Honest caveat: homogeneity may let cancellation escape volume inequalities.
 
 ## 7. Summary of status
-- PROVEN: max_4,5,6 in V_2 (max_6 novel, chamber-verified). Forced negativity for n>=5. max_7 NOT in integer-2-layer
-  (= HHL). max_7 NOT in complete weight-2, weight-3, and several complete low-complexity weight-4 families (exact).
+- PROVEN: max_4,5,6 in V_2 (max_6 novel, chamber-verified). Forced negativity for n>=5. Single-chamber invisibility
+  lemma (Section 4.5). max_7 NOT in integer-2-layer (= HHL). max_7 NOT in complete weight-2, weight-3, and several
+  complete low-complexity weight-4 families (exact).
+- STRUCTURAL (this session): the OUT obstruction is a GLOBAL cross-chamber gluing failure (invisibility lemma); the
+  raw dual certificate is a forced-diffuse basis artifact (min-support = rank+1, ~200-digit coeffs, 123 chambers),
+  not a local invariant; the minimal virtual decomposition of max_5/6 is dyadic 4:2:1 (3+3 blocks) but this sparsity
+  does NOT extend to max_7 in searched weight-{3,4,5} pools.
 - OPEN: max_7 in V_2 over the reals (= the depth-2-vs-3 question for n=7). Any 2-layer max_7 must be even-denominator
-  (dyadic). The construction, if it exists, lives at weight >= 4 (where the IN mechanism is present); a lower bound
-  must use a HIGHER-ORDER (non-wall) obstruction, for which no tool currently exists.
+  (dyadic). The construction, if it exists, lives at weight >= 4; a lower bound must use a HIGHER-ORDER, cross-chamber
+  (non-single-chamber) obstruction, for which no tool currently exists. Primary route forward: the P2-restricted
+  DECOMPOSITION POLYHEDRON and its emptiness-persistence question (our form of AHM Question 18).
 
 ## Appendix: reproducibility (key files)
 verify_2layer.py (max_4,5,6 exact rational), check_max6.py (chamber proof), gpu_w3.py (max_7 OUT weight-3),
 construction_search.py (complete weight-4 <=k-vertex), dyadic_search.py (BBHSY-complexity dyadic), wall_poscontrol.py
 (validated Type-II on complete weight-2), weight3_typeII.py (Type-II weight-3), virtual_dissect.py /
 valuation_factorization_max6.py (cancellation structure), infinitesimal_rigidity_max6.py (rigidity test),
-extract_certificate.py (IN -> certificate). Theory: NEW_THEORY.md, LITERATURE.md, MAX7_CLASSIFICATION.md,
-OUT_THEORY.md, WALL_VALUATION_MAX6.md, MAX7_DYADIC_CONSTRUCTION.md. Log: dev/active/.../RESEARCH_LOG.md (iters 1-50).
+extract_dual_certificate.py + min_cert_weight2.py (exact weight-2 OUT certificate + min-support = rank+1 diffuseness),
+min_virtual_decomp.py (dyadic 4:2:1 minimal decomposition), disciplined_construction_max7.py + omp_dyadic_max7.py
+(construction search, negative), extract_certificate.py (IN -> certificate). Theory: GLOBAL_GLUE_OBSTRUCTION.md
+(single-chamber lemma), MIN_CERT_WEIGHT2.md, NEW_THEORY.md, LITERATURE.md, MAX7_CLASSIFICATION.md, OUT_THEORY.md,
+WALL_VALUATION_MAX6.md, MAX7_DYADIC_CONSTRUCTION.md. Log: dev/active/.../RESEARCH_LOG.md (iters 1-56).
