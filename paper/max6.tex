@@ -9,6 +9,7 @@
 \newtheorem{conjecture}{Conjecture}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
+\newtheorem{question}{Question}
 
 \newcommand{\RR}{\mathbb{R}}
 \DeclareMathOperator{\conv}{conv}
@@ -28,10 +29,10 @@ also listed as open in subsequent work. We give an explicit construction as a si
 $S_6$-orbits of $P_2$ support functions with denominator $360$, together with an exact, floating-point
 free computer-assisted proof of correctness. We show that such a representation must use cancellation --- a
 signed Minkowski identity in which the simplex appears only after cancellation --- for all $n\ge 5$. We then
-give computational evidence that six is the exact threshold: $\max_7$ and $\max_8$ are not representable in
-the same family even after enlarging it. Finally we isolate the obstruction to a separation as a global,
-cross-chamber phenomenon by a single-chamber invisibility lemma, and reduce a genuine two-versus-three
-hidden-layer separation to a single lattice normal-form conjecture.
+give an exact finite-family obstruction at the $\max_7$ frontier: $\max_7$ is not representable in the
+complete weight-2 lattice family. We isolate the obstruction to a separation as a global, cross-chamber
+phenomenon via a single-chamber invisibility lemma, and reduce a genuine two-versus-three hidden-layer
+separation to a lattice normal-form conjecture.
 \end{abstract}
 
 \section{Introduction}
@@ -71,10 +72,16 @@ Minkowski. Then $P_1$ is the class of zonotopes, and $P_2$ is Minkowski sums of 
 zonotopes}. A \emph{block} is $R=\conv(Z_1\cup Z_2)$ with $Z_1,Z_2$ zonotopes, and
 $h_R(x)=\max\big(h_{Z_1}(x),h_{Z_2}(x)\big)$.
 
+We work throughout in the homogeneous support-function correspondence of~\cite{BBHSY,HHL}: a $k$-hidden-layer
+ReLU (equivalently maxout) network computes, up to an affine-linear term, a difference $h_Q-h_P$ of support
+functions of virtual polytopes $P,Q\in P_k$. Since $\max_n$ is positively homogeneous, no generality is lost
+by working with support functions modulo a linear term; the additive constant is absorbed into the affine
+part and, by evaluating at the origin, is zero for $\max_n$ itself.
+
 \begin{lemma}[Two-layer dictionary]\label{lem:dict}
-A CPWL function $f:\RR^n\to\RR$ is computable by a ReLU network with two hidden layers if and only if
+In this correspondence, a CPWL function $f:\RR^n\to\RR$ is two-hidden-layer computable if and only if
 $f=\sum_{t} c_t\,h_{R_t}+\ell$ for finitely many blocks $R_t$, real coefficients $c_t$, and an affine-linear
-$\ell$. In particular $\max_6\in$ two hidden layers iff $h_\Delta=\sum_t c_t h_{R_t}+\ell$ for blocks $R_t$.
+$\ell$. In particular $\max_6$ is two-hidden-layer iff $h_\Delta=\sum_t c_t h_{R_t}+\ell$ for blocks $R_t$.
 \end{lemma}
 
 \begin{proof}
@@ -253,7 +260,7 @@ on $\RR^6$. Since $C$ is a signed sum of block support functions, Lemma~\ref{lem
 two-hidden-layer ReLU function. \qed
 \end{proof}
 
-\section{The threshold and a route to a separation}
+\section{The $\max_7$ frontier and a route to a separation}
 
 The two-hidden-layer functions whose building blocks have vertices in the weight-2 lattice form a finite
 family: a weight-2 zonotope has vertices among the finitely many lattice points, and the building blocks
@@ -267,17 +274,22 @@ $\max_7$ has no two-hidden-layer representation with all building-block vertices
 \end{proposition}
 
 This is exact: the complete family yields a linear system over $\mathbb{Q}$ that is inconsistent for
-$\max_7$ (and consistent for $\max_6$, recovering Theorem~\ref{thm:main}). The same holds for $\max_8$.
-This locates a qualitative change exactly at $n=6$, and we conjecture:
+$\max_7$ (and consistent for $\max_6$, recovering Theorem~\ref{thm:main}). It is a genuine lower bound over
+the weight-2 lattice, and locates the frontier at $n=7$.
 
-\begin{conjecture}
-$\max_n$ is computable in two hidden layers if and only if $n\le 6$.
-\end{conjecture}
+\begin{question}
+Is $\max_7$ computable by a two-hidden-layer ReLU network over real weights?
+\end{question}
 
-Proposition~\ref{prop:max7} is a genuine lower bound over the weight-2 lattice; what is missing for an
-unconditional separation is only that the lattice may be assumed weight-2. The reduction $\max_n$ two-layer $\iff \Delta+P=Q$ with $P,Q\in P_2$ is standard; one checks
-that any representation may be symmetrized, and that $\Delta+P=Q$ forces the normal fan of $Q$ to refine
-the braid fan. The remaining content is a normal-form lemma:
+The exact status of $\max_7$ over real weights remains open; Proposition~\ref{prop:max7} shows it lies
+outside the complete weight-2 lattice family, making it the next frontier. What is missing for an
+unconditional separation is only that the lattice may be assumed weight-2. The reduction
+\[
+   \max_n\ \text{two-hidden-layer}\quad\Longleftrightarrow\quad \Delta+P=Q\ \text{ for some } P,Q\in P_2
+\]
+(up to translation) is standard: any representation may be symmetrized (Lemma~\ref{lem:sym}), and
+$\Delta+P=Q$ forces the normal fan of $Q$ to refine the braid fan. The remaining content is a normal-form
+lemma:
 
 \begin{conjecture}[Lattice normal form]
 If $\max_n$ is computable in two hidden layers, it has a representation with all building-block vertices in
