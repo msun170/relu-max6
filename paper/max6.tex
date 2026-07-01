@@ -94,11 +94,13 @@ of signed sums of block support functions with all block vertices in this lattic
 
 \begin{lemma}[Symmetrization]\label{lem:sym}
 If $h_\Delta=\sum_t c_t h_{R_t}+\ell$ with blocks $R_t$, then also
-$h_\Delta=\sum_t c_t\big(\tfrac{1}{|S_n|}\sum_{\sigma\in S_n} h_{\sigma R_t}\big)+\bar\ell$, an
-$S_n$-symmetric representation in which each term is an orbit sum of blocks and $\bar\ell$ is the symmetric
-linear function $\tfrac{1}{n}(\sum_i x_i)\cdot(\text{const})$. Consequently $\max_n\in$ two layers iff it has
-an $S_n$-symmetric such representation, and the search may be restricted to $S_n$-orbits of blocks (for
-$n=6$ this collapses $16390$ two-way joins to $78$ orbit classes, making an exact linear solve tractable).
+\[
+  h_\Delta=\sum_t c_t\Big(\tfrac{1}{|S_n|}\sum_{\sigma\in S_n} h_{\sigma R_t}\Big)+\bar\ell,
+\]
+an $S_n$-symmetric representation in which each term is an orbit sum of blocks and $\bar\ell$ is a scalar
+multiple of $\sum_i x_i$. Consequently $\max_n\in$ two layers iff it has an $S_n$-symmetric such
+representation, and the search may be restricted to $S_n$-orbits of blocks (for $n=6$ this collapses
+$16390$ two-way joins to $78$ orbit classes, making an exact linear solve tractable).
 \end{lemma}
 
 \begin{proof}
