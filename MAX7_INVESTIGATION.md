@@ -63,12 +63,28 @@ Consequences:
 - Wall-based lower-bound arguments (the entire wall-circuit line) are PROVABLY too coarse for max_7 at weight-3 --
   they report feasible. A genuine obstruction must use HIGHER-ORDER (full-function) structure.
 
-## Where this points
+## How DEEP is the obstruction? (obstruction ladder, higher_order_obstruction_w3.py)
+We measured the FIRST codimension at which max_7's data leaves the complete weight-3 block span, by testing
+membership of finite-difference data of increasing order (codim-1 = single 2nd-differences = walls; codim-2 = mixed
+2nd-differences = ridges/two-wall), saturating each level. Controls: n=5 weight-2 all FEASIBLE (max_5 IN); n=7
+weight-2 codim-1 saturated + INFEASIBLE (first-order obstruction, matches Type-II=0). RESULT for n=7 weight-3:
+  codim-1:   rank 2199/2200 (marginal), FEASIBLE.
+  codim-1+2: rank 3683/4400 (saturated, margin 717), FEASIBLE.
+So max_7's codim-<=2 (ridge / two-wall) data IS matchable -> the obstruction is NOT second-order. Since full
+membership is OUT, it lives in codim>=3 / higher structure: the obstruction is DEEP / GLOBAL. (Caveats: finite-diff
+is a proxy for codim; the full and codim-3 levels need ~19000 rows to saturate (family near-full-dim) and were not
+reached, so the exact order -- codim-3 vs genuinely global -- is not pinned.)
+
+## Where this points (updated)
 - IN (construction): not blocked by the mechanism; would live at weight >= 4 (dyadic), where complete exact
   enumeration is currently infeasible (29732 orbits at <=4 vertices already over the membership limit).
-- OUT (lower bound): must be HIGHER-ORDER, not wall-level. The best-motivated remaining tool is MIXED VOLUMES /
-  ALEKSANDROV-FENCHEL on the virtual identity Delta + N = M -- the degree->=2 invariants that see exactly the
-  higher-order structure the walls miss (caveat: homogeneity may let cancellation escape volume inequalities).
+- OUT (lower bound): must be HIGHER-ORDER. The ladder REDIRECTS away from mixed volumes / Aleksandrov-Fenchel:
+  those are essentially codim-2 (2-face) invariants, and codim-2 data is MATCHABLE here, so mixed-volume-type
+  quantities alone cannot obstruct max_7. The obstruction is deeper -> a GLOBAL certificate is needed. The
+  best-motivated object is the DECOMPOSITION POLYHEDRON (Brandenburg-Grillo-Hertrich, arXiv:2410.04907): the
+  continuous space of difference-of-convex (virtual Minkowski) decompositions, where the OUT is a genuinely global
+  (non-bounded-order) property. (A direct exact DUAL CERTIFICATE lambda from the weight-3 OUT, and an analysis of its
+  order/support, is the concrete next probe.)
 - The bounded-weight normal form (if provable for an explicit W(7)) would make max_7 DECIDABLE by exact membership;
   this is the max_n-specific case of Averkov-Hojny-Merkert Question 18 (real-weight => rational-weight at fixed
   depth), which is open and "almost holds."
