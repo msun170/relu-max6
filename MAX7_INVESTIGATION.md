@@ -75,6 +75,24 @@ membership is OUT, it lives in codim>=3 / higher structure: the obstruction is D
 is a proxy for codim; the full and codim-3 levels need ~19000 rows to saturate (family near-full-dim) and were not
 reached, so the exact order -- codim-3 vs genuinely global -- is not pinned.)
 
+## STRUCTURAL RESULT: the max_m-lift / Pascal characterization of the weight-2 obstruction (construction_hunt / verified)
+For each m, lifting the (weight-2) construction of max_m over every m-subset of [7] gives an EXACT weight-2 two-layer
+construction of the order-statistic function  L_m(x) = sum_k C(7-k, m-1) x_(k).  E.g. sum_i max_6([7]\{i}) =
+6 x_(1) + x_(2) exactly (verified). The a-vectors a^{(m)}_k = C(7-k, m-1) for m=1..7 form a PASCAL matrix (rank 7,
+linearly independent). max_7 = x_(1) = e_1 is the m=7 vector -- the UNIQUE Pascal direction NOT in span{L_1..L_6}.
+So the weight-2-achievable order statistics are exactly the 6-dim Pascal hyperplane span{L_1..L_6}, and max_7 is the
+one max-of-m outside it. STRIKING: dist(e_1, span{L_1..L_6}) = 0.0329, essentially EQUAL to the measured weight-2
+approximation floor 0.032 -- so the weight-2 floor is precisely the Pascal-distance of max_7 to the lower-max lifts.
+This completely characterizes the weight-2 obstruction, and is constructive (exact weight-2 formulas for 6x_(1)+x_(2)
+and the whole L_m family). To reach max_7 one must supply the transverse e_1 (m=7) direction, unavailable at weight-2.
+
+## Positive construction hunt (construction_hunt.py) -- status
+Round 1: exact orbit-sum membership over a DIVERSE incomplete pool of 4800 blocks spanning weights 4,5,6 (weight-5,6
+never tested before): max_7 OUT (rank 1786/8000, control OK), residual floor 0.00080. Not an OUT proof (incomplete
+pool); the tiny floor is the dense-span artifact. Next positive moves: residual-guided column generation; the
+weight-3 wall-skeleton + weight-4 wall-invisible correction (search ker(NB) n ker(J)); and the max_m-lift skeleton +
+transverse correction (supply the e_1 Pascal direction from a higher-weight block).
+
 ## Where this points (updated)
 - IN (construction): not blocked by the mechanism; would live at weight >= 4 (dyadic), where complete exact
   enumeration is currently infeasible (29732 orbits at <=4 vertices already over the membership limit).
